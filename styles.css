@@ -4,6 +4,7 @@
     box-sizing:border-box;
 }
 
+/* root directory */
 :root{
     /* background */
     --bg-main:ghostwhite;
@@ -36,9 +37,38 @@ body {
 
     overflow-y:scroll;
 
-    border:2px solid var(--color-secondary);
+    /* border:2px solid var(--color-secondary); */
 }
 
+/* about */
+#about-container {
+
+width:100%;
+height:100%;
+
+display:flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+
+margin:1.5rem 0;
+
+}
+#about-container h3 em {
+    font-size:21pt;
+}
+#about-container h3 p {
+    margin-top:.5rem;
+    line-height: .28in;
+}
+#about-container h3{
+    color:var(--color-secondary);
+
+    width:50%;
+    
+    text-align:center;
+
+}
 /* plate container */
 #plate-container {
     border:2px solid var(--color-secondary);
@@ -149,7 +179,6 @@ div.plate-section:last-child{
 }
 
 /* plate indicators */
-
 .plate-section div.plate-indicator {
     min-width:inherit;
 
@@ -175,7 +204,6 @@ div.plate-section:last-child{
    
 }
 
-
 /* indicators */
 
 /* proteins */
@@ -186,7 +214,6 @@ div.plate-section:last-child{
     /* height: 150px !important; */
 
 }
-
 
 /* carbs */
 [data-carbohydrates-indicator] {
@@ -212,4 +239,86 @@ div.plate-section:last-child{
     
     /* height: 46px !important; */
 
+}
+
+
+/* input BMR */
+.instruction,.insruction-detail {
+    color:var(--color-secondary);
+    width:50%;
+}
+.instruction{
+    font-size:16pt;
+
+    margin-top:2rem;
+
+}
+.insruction-detail{
+    margin:.25rem;
+
+    font-size:14pt;
+
+}
+#input-container {
+    width:50%;
+
+    
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    gap:4px;
+
+    border:2px solid white;
+
+    padding:.5rem 0;
+
+    margin-top:.25rem;
+
+}
+
+/* input arrows */
+#input-container p {
+    transition: .25s;
+    padding:.25rem;
+    
+    font-size:14pt;
+}
+/* left arrow */
+#input-container p:first-child{
+    display:none;
+
+    border-top:.5px solid var(--color-secondary);
+    border-left:.5px solid var(--color-secondary);
+    border-bottom:.5px solid var(--color-secondary);
+}
+/* right arrow */
+#input-container p:last-child{
+    border-top:.5px solid var(--color-secondary);
+    border-right:.5px solid var(--color-secondary);
+    border-bottom:.5px solid var(--color-secondary);
+}
+/* arrow hover */
+#input-container p:hover {
+    cursor:pointer;
+
+    background-color: var(--color-secondary);
+
+    color:var(--color-main) !important;
+
+    transform:scale(.94)
+
+}
+
+input,select{
+    outline:none;
+
+    padding:.35rem 0;
+
+    font-size:11pt;
+
+    text-align:center;
+}
+
+select:hover {
+    cursor:pointer;
 }

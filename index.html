@@ -19,6 +19,12 @@
     <!-- wrapper -->
      <div id="wrapper" class="wrapper-container container-wrapper">
         
+        <!-- about -->
+         <div id="about-container">
+            <h3>
+                <em>Nutrition Hack</em> <p>provides you with a balanced meal for breakfast, lunch, and dinner. Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis consequuntur ut eligendi quasi voluptatum nesciunt corrupti unde, voluptas labore qui atque iste adipisci officia sint, consectetur soluta officiis perferendis esse, dolor expedita beatae. Ab vitae ipsum alias nulla fuga excepturi? Architecto, optio. Vitae, veniam eos odit laudantium at dicta. Incidunt.</p> 
+            </h3>
+         </div>
         <!-- 1. plate -->
          <div id="plate-container" data-plate>
             
@@ -41,11 +47,42 @@
             
          </div>
 
-        <!-- 2. user input (height weight age gender)-->
+        <!-- 2. BMR = user input (height weight age gender)-->
+         
+        <em class="instruction instruction-bmr" id="instruction1">
+                1. First, let's target your Basal Metabolic Rate (BMR)
+            </em>
+            <p class="insruction-detail">Our BMR is the number of calories your body burns at complete rest to keep vital organs functioning.</p>
+            <p class="insruction-detail" style="color:yellow !important">Start by adding your height, weight, age & gender.</p></p>
 
-        <!-- 3. TDEE -->
+         <div id="input-container">
+            
+            <!-- left arrow -->
+            <p style="color:#fff">PREV</p>
+            <!-- input -->
+             <input type="number" id="input-height" required placeholder="Height">
+            <!-- right arrow -->
+            <p style="color:#fff">NEXT</p>
 
-        <!-- 4. TDEE offset (gain neutral lose) -->
+         </div>
+        <!-- 3. TDEE = BMR x activity level-->
+         <em class="instruction instruction-bmr" id="instruction1">
+                1. Second, let's target your Total Daily Energy Expenditure (TDEE)
+            </em>
+            <p class="insruction-detail">Our TDEE is the total calorie burn for the day, which includes your BMR plus physical activity, daily movement, and digestion.</p>
+            <p class="insruction-detail" style="color:yellow !important">Currently, how active are you in a typical day?</p></p>
+
+            <select name="tdee" id="tdee-selection">
+
+                <option value="">Level of Activity</option>
+                <option value="1.2">sedentary - 1.2 (little or no exercise, desk job)</option>
+                <option value="1.375">lightly active - 1.375 (light exercise/sports 1–3 days/week)</option>
+                <option value="1.55">moderately active - 1.55 (moderate exercise/sports 3–5 days/week)</option>
+                <option value="1.725">very active - 1.725 (hard exercise/sports 6–7 days/week)</option>
+                <option value="1.9">extra active - 1.9 (very hard exercise, physical job, or twice-daily training)</option>
+            </select>
+        <!-- 4. TDEE & TDEE offset (gain neutral lose) -->
+         
 
         <!-- TIP: If any of the above options change, clear the plate. -->
         <!-- Clear the grocery list if a new food item is placed before adding -->
