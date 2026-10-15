@@ -19,4 +19,197 @@
 
 body {
     background-color: var(--bg-secondary);
+
+    height:100%;
+    width:100%;
+
+}
+
+#wrapper {
+    height:inherit;
+    width:inherit;
+
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+
+    overflow-y:scroll;
+
+    border:2px solid var(--color-secondary);
+}
+
+/* plate container */
+#plate-container {
+    border:2px solid var(--color-secondary);
+
+    aspect-ratio:1 / 1;
+    height:400px;
+    width:400px;
+
+    border-radius:50%;
+
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    overflow:hidden;
+
+    position:relative;
+}
+
+/* plate macros */
+#plate-container div.plate-section {
+    display:flex;
+    flex-direction: column;
+    justify-content: end;
+
+    font-size:14pt;
+    
+    min-height:50%;
+    min-width:50%;
+
+    border:.25px solid var(--color-secondary);
+    box-shadow:0 0 .5px .9px ghostwhite;
+
+    position:absolute;
+}
+
+/* plate label */
+.plate-section > p {
+    mix-blend-mode:difference; 
+    
+    font-family: Arial, Helvetica, sans-serif;
+
+    position:absolute;
+
+    color:var(--color-secondary);
+}
+
+/*
+||
+||
+||
+\/ 
+*/
+
+[data-proteins] > p{
+    top:10%;
+    left:25%;
+}
+[data-carbohydrates] > p{
+    bottom:10%;
+    left:25%;
+}
+[data-alcohol] > p{
+    bottom:10%;
+    right:25%;
+}
+[data-fats] > p {
+    top:10%;
+    right:25%;
+}
+
+
+/* proteins */
+div.plate-section:first-child{
+    border-bottom-right-radius:50%;
+
+    bottom:0;
+    right:0;
+
+}
+
+/* carbs */
+div.plate-section.second-child{
+    border-top-right-radius:50%;
+
+    top:0;
+    right:0;
+
+}
+
+/* alcohol */
+div.plate-section.third-child{
+    border-top-left-radius:50%;
+
+    top:0;
+    left:0;
+
+}
+
+/* fats */
+div.plate-section:last-child{
+    border-bottom-left-radius:50%;
+
+    bottom:0;
+    left:0;
+
+}
+
+/* plate indicators */
+
+.plate-section div.plate-indicator {
+    min-width:inherit;
+
+    border:.25px solid ghostwhite;
+
+    animation: introduceMacros 2s forwards;
+
+    transition:smooth !important;
+}
+
+/* keyframe animation  */
+@keyframes introduceMacros {
+    0%{
+
+        height:0;
+    }
+    50%{
+        height:200px;
+    }
+    100%{
+        height:0;
+    }
+   
+}
+
+
+/* indicators */
+
+/* proteins */
+[data-proteins-indicator] {
+    
+    background-color:green;
+
+    /* height: 150px !important; */
+
+}
+
+
+/* carbs */
+[data-carbohydrates-indicator] {
+    background-color:green;
+    
+    background-color:yellow;
+
+    /* height: 90px !important; */
+
+}
+
+/* fats */
+[data-fats-indicator] {
+    background-color:orange;
+    
+    /* height: 130px !important; */
+
+}
+
+/* alcohol */
+[data-alcohol-indicator] {
+    background-color:red;
+    
+    /* height: 46px !important; */
+
 }
