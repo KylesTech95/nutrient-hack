@@ -422,3 +422,7 @@ select:hover {
 .container-border {
     border:2px solid var(--bg-main);
 }
+
+.already-there {
+    color:#0f0 !important;
+}

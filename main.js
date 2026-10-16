@@ -89,9 +89,7 @@ function handleIteration(){
     if(current_index > demographics['inputs'].length - 2) {
         demographics.element.setAttribute('placeholder', 'Completed');
         demographics.element.oninput = handleCompleted;
-
     } 
-
 }
 }
 
@@ -119,18 +117,16 @@ function handlePrev(e){
 
     // update the demo-bin
     updateBin(demographics)
-    // clear new input value
-    if(demographics.bin[demographics['inputs'][current_index]] == '') {
-        demographics.element.value = ''
-    } else {
-        demographics.element.value = demographics.bin[demographics['inputs'][current_index]]
-    }
+
+    handleInputInteractions()
 
     console.log(current_index)
     handleIteration()
 
     console.log(demographics.element)
     console.log(demographics.bin)
+
+    handleInputInteractions()
 }
 
 // find BMR - next input
@@ -169,6 +165,8 @@ function handleNext(e){
         // remove submit [next] button
         demographics.next.classList.add('no-display');
     }
+
+    handleInputInteractions()
 }
 
 function handleBMRSubmission(bin){
@@ -214,4 +212,22 @@ function handleGenderInput(e){
 function handleCompleted(e){
     // empty value
     e.target.value = ''
+}
+
+function handleInputInteractions(){
+    // input interactions
+    console.log(demographics['inputs'][current_index])
+    console.log(demographics.bin)
+    if(!Object.hasOwn(demographics.bin,demographics['inputs'][current_index])
+        || 
+       (Object.hasOwn(demographics.bin,demographics['inputs'][current_index]) && 
+        demographics.bin[demographics['inputs'][current_index]] === '')) {
+            
+        console.log('not there')
+        demographics.element.classList.remove('already-there');
+        demographics.element.value = ''
+    } else {
+        demographics.element.value = demographics.bin[demographics['inputs'][current_index]] || '';
+        demographics.element.classList.add('already-there');
+    }
 }
