@@ -10,6 +10,7 @@
     --bg-main:ghostwhite;
     --bg-secondary: #000;
     --bg-tertiary:rgb(255, 255, 146);
+    --bg-special:#181818;
 
     /* colors */
     --color-main:#000;
@@ -21,7 +22,9 @@
 :root {
     --bg-main:#000;
     --bg-secondary: #fff;
-    --bg-tertiary:rgb(255, 183, 0);
+    --bg-tertiary:rgb(0,0,255);
+    --bg-special:#e7e7e7;
+
 
     /* colors */
     --color-main:#fff;
@@ -81,10 +84,10 @@ margin:1.5rem 0;
 }
 /* plate container */
 #plate-container {
-    animation: spinPlate 2.25s ease-in-out;
+    animation: spinPlate 2.25s ease-out;
 
-    background-color: var(--bg-seconary);
-    border:2px solid var(--color-secondary);
+    background-color: var(--bg-special);
+    border:.5px solid var(--color-secondary);
 
     aspect-ratio:1 / 1;
     height:400px;
@@ -103,8 +106,18 @@ margin:1.5rem 0;
 }
 
 @keyframes spinPlate {
-    to {
+    0% {
+        box-shadow: none;
+
+    }
+    50% {
+        box-shadow: 0 .4rem 10px 3px var(--bg-main);
+
+    }
+    100% {
         transform:rotate(360deg);
+        box-shadow: none
+
     }
 }
 
@@ -316,7 +329,7 @@ div.plate-section:last-child{
     color:var(--bg-tertiary)
 
 }
-#input-container {
+#input-container,#input-container2 {
     width:50%;
 
     
@@ -325,7 +338,6 @@ div.plate-section:last-child{
     justify-content: center;
     gap:4px;
 
-    border:2px solid white;
 
     padding:.5rem 0;
 
@@ -400,4 +412,8 @@ select:hover {
 /* no display */
 .no-display {
     display:none;
+}
+
+.container-border {
+    border:2px solid var(--bg-main);
 }
