@@ -108,6 +108,7 @@ margin:1.5rem 0;
 @keyframes spinPlate {
     0% {
         box-shadow: none;
+        transform:rotate(0) scale(.5);
 
     }
     50% {
@@ -115,8 +116,8 @@ margin:1.5rem 0;
 
     }
     100% {
-        transform:rotate(360deg);
-        box-shadow: none
+        transform:rotate(1080deg) scale(1);
+        box-shadow: none;
 
     }
 }
