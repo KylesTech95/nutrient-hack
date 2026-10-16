@@ -81,6 +81,7 @@ margin:1.5rem 0;
 }
 /* plate container */
 #plate-container {
+    background-color: var(--bg-seconary);
     border:2px solid var(--color-secondary);
 
     aspect-ratio:1 / 1;
@@ -109,8 +110,8 @@ margin:1.5rem 0;
     min-height:50%;
     min-width:50%;
 
-    border:.25px solid var(--color-secondary);
-    box-shadow:0 0 .5px .9px ghostwhite;
+    border:.25px solid var(--color-primary);
+    box-shadow:0 0 .5px .9px var(--color-secondary);
 
     position:absolute;
 }
@@ -118,7 +119,6 @@ margin:1.5rem 0;
 /* plate label */
 .plate-section > p {
     z-index:998;
-    mix-blend-mode:difference; 
     
     font-family: Arial, Helvetica, sans-serif;
 
@@ -204,7 +204,7 @@ div.plate-section:last-child{
 
     min-width:inherit;
 
-    border:.25px solid ghostwhite;
+    /* border:.25px solid ghostwhite; */
 
     transition:smooth !important;
 
@@ -241,12 +241,12 @@ div.plate-section:last-child{
 [data-carbohydrates-indicator] {
     background-color:green;
     
-    background-color:yellow;
+    background-color:blueviolet;
 
     transform:rotate(180deg);
     /* height: 90px !important; */
 
-    animation: introduceMacros 1.5s 1s forwards normal;
+    animation: introduceMacros 1s 1s forwards normal;
 
 }
 
