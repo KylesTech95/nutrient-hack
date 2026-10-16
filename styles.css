@@ -81,6 +81,8 @@ margin:1.5rem 0;
 }
 /* plate container */
 #plate-container {
+    animation: spinPlate 2.25s ease-in-out;
+
     background-color: var(--bg-seconary);
     border:2px solid var(--color-secondary);
 
@@ -98,6 +100,12 @@ margin:1.5rem 0;
     overflow:hidden;
 
     position:relative;
+}
+
+@keyframes spinPlate {
+    to {
+        transform:rotate(360deg);
+    }
 }
 
 /* plate macros */
@@ -121,10 +129,16 @@ margin:1.5rem 0;
     z-index:998;
     
     font-family: Arial, Helvetica, sans-serif;
+    font-size:16pt;
+
 
     position:absolute;
 
     color:var(--color-secondary);
+
+    transform: rotate(25deg);
+
+
 }
 
 /*
@@ -135,20 +149,21 @@ margin:1.5rem 0;
 */
 
 [data-proteins] > p{
-    top:10%;
-    left:25%;
+    top:25%;
+    left:30%;
+
 }
 [data-carbohydrates] > p{
-    bottom:10%;
-    left:25%;
+    bottom:25%;
+    left:30%;
 }
 [data-alcohol] > p{
-    bottom:10%;
-    right:25%;
+    bottom:25%;
+    right:30%;
 }
 [data-fats] > p {
-    top:10%;
-    right:25%;
+    top:25%;
+    right:30%;
 }
 
 
