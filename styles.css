@@ -48,7 +48,7 @@ body {
     align-items:center;
     justify-content: center;
 
-    overflow-y:scroll;
+    overflow:auto;
 
     /* border:2px solid var(--color-secondary); */
 }
