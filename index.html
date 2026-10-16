@@ -58,11 +58,11 @@
          <div id="input-container" class="container-border">
             
             <!-- left arrow -->
-            <p style="color:#fff" class="no-display">PREV</p>
+            <p id="prev-arrow" style="color:#fff" class="no-display">PREV</p>
             <!-- input -->
-             <input type="number" id="input-height" required placeholder="Height">
+             <input type="number" class="demographics-input" name="height" id="input-height" required placeholder="Height">
             <!-- right arrow -->
-            <p style="color:#fff">NEXT</p>
+            <p id="next-arrow" style="color:#fff">NEXT</p>
 
          </div>
         <!-- 3. TDEE = BMR x activity level-->
@@ -73,7 +73,7 @@
             <p class="instruction-detail question">Currently, how active are you in a typical day?</p></p>
 
             <div id="input-container2" class="container-border">
-                    <select name="tdee" id="tdee-selection">
+                    <select name="tdee" id="tdee-selection" disabled>
 
                 <option value="">Level of Activity</option>
                 <option value="1.2">sedentary - 1.2 (little or no exercise, desk job)</option>
@@ -86,7 +86,7 @@
             </div>  
             
         <!-- 4. TDEE & TDEE offset (gain neutral lose) -->
-            
+
 
         <!-- TIP: If any of the above options change, clear the plate. -->
         <!-- Clear the grocery list if a new food item is placed before adding -->
