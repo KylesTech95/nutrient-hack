@@ -17,7 +17,17 @@
     --color-error: #f00;
     --color-notification: #0f0;
 }
+@media (prefers-color-scheme: dark) {
+:root {
+    --bg-main:#000;
+    --bg-secondary: #fff;
+    --bg-tertiary:rgb(255, 183, 0);
 
+    /* colors */
+    --color-main:#fff;
+    --color-secondary: #000;
+}
+}
 body {
     background-color: var(--bg-secondary);
 
@@ -264,20 +274,31 @@ div.plate-section:last-child{
 
 
 /* input BMR */
-.instruction,.insruction-detail {
-    color:var(--color-secondary);
+.instruction,.instruction-detail {
     width:50%;
 }
 .instruction{
-    font-size:16pt;
+    color:var(--color-secondary);
+
+    font-size:18pt;
 
     margin-top:2rem;
 
 }
-.insruction-detail{
+.instruction-detail{
+    margin:.5rem 0;
+
+    font-size:14pt;
+}
+.info {
+    color:var(--color-secondary);
+}
+.question{
     margin:.25rem;
 
     font-size:14pt;
+
+    color:var(--bg-tertiary)
 
 }
 #input-container {
@@ -303,10 +324,14 @@ div.plate-section:last-child{
     padding:.25rem;
     
     font-size:14pt;
+
+    background-color: var(--color-primary);
+
+    color:var(--color-secondary) !important;
+
 }
 /* left arrow */
 #input-container p:first-child{
-    display:none;
 
     border-top:.5px solid var(--color-secondary);
     border-left:.5px solid var(--color-secondary);
@@ -338,8 +363,26 @@ input,select{
     font-size:11pt;
 
     text-align:center;
+
+    color:var(--color-main);
+
+    background-color:var(--bg-main);
 }
 
 select:hover {
     cursor:pointer;
+}
+
+
+
+
+
+
+
+
+/* special classes */
+
+/* no display */
+.no-display {
+    display:none;
 }

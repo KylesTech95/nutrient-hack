@@ -52,13 +52,13 @@
         <em class="instruction instruction-bmr" id="instruction1">
                 1. First, let's target your Basal Metabolic Rate (BMR)
             </em>
-            <p class="insruction-detail">Our BMR is the number of calories your body burns at complete rest to keep vital organs functioning.</p>
-            <p class="insruction-detail" style="color:yellow !important">Start by adding your height, weight, age & gender.</p></p>
+            <p class="instruction-detail info">Our BMR is the number of calories your body burns at complete rest to keep vital organs functioning.</p>
+            <p class="instruction-detail question">Start by adding your height, weight, age & gender.</p></p>
 
          <div id="input-container">
             
             <!-- left arrow -->
-            <p style="color:#fff">PREV</p>
+            <p style="color:#fff" class="no-display">PREV</p>
             <!-- input -->
              <input type="number" id="input-height" required placeholder="Height">
             <!-- right arrow -->
@@ -66,11 +66,11 @@
 
          </div>
         <!-- 3. TDEE = BMR x activity level-->
-         <em class="instruction instruction-bmr" id="instruction1">
-                1. Second, let's target your Total Daily Energy Expenditure (TDEE)
+         <em class="instruction instruction-bmr" id="instruction2">
+                2. Second, let's target your Total Daily Energy Expenditure (TDEE)
             </em>
-            <p class="insruction-detail">Our TDEE is the total calorie burn for the day, which includes your BMR plus physical activity, daily movement, and digestion.</p>
-            <p class="insruction-detail" style="color:yellow !important">Currently, how active are you in a typical day?</p></p>
+            <p class="instruction-detail info">Our TDEE is the total calorie burn for the day, which includes your BMR plus physical activity, daily movement, and digestion.</p>
+            <p class="instruction-detail question">Currently, how active are you in a typical day?</p></p>
 
             <select name="tdee" id="tdee-selection">
 
@@ -82,7 +82,7 @@
                 <option value="1.9">extra active - 1.9 (very hard exercise, physical job, or twice-daily training)</option>
             </select>
         <!-- 4. TDEE & TDEE offset (gain neutral lose) -->
-         
+
 
         <!-- TIP: If any of the above options change, clear the plate. -->
         <!-- Clear the grocery list if a new food item is placed before adding -->
