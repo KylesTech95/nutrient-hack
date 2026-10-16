@@ -12,8 +12,13 @@ let demographics = {
 // click prev/next buttons
 demographics.prev.onclick = handlePrev
 demographics.next.onclick = handleNext
-// ____________________________________________
 
+
+// calculate TDEE (BMR x Activity level)
+let activiy_locked = true;
+// tdee input [select]
+const tdee_selection = document.getElementById('tdee-selection')
+// ____________________________________________
 
 
 // window events
@@ -24,12 +29,13 @@ demographics.next.onclick = handleNext
 // functions
 
 // beforeunload
+
+// unsaved changes may not save
 function beforeUnload(e) {  
     e.preventDefault()
     // trigger unsaved changes
     e.returnValue = '';
 }
-
 
 // find BMR - handle iteration
 function handleIteration(){
@@ -43,9 +49,16 @@ function handleIteration(){
     }
     
     if(current_index < demographics.inputs.length - 1) {
+        demographics.next.textContent = 'NEXT';
         demographics.next.classList.remove('no-display');
     } else {
         demographics.next.classList.add('no-display');
+
+        if(demographics['inputs'].slice(0,-1).every(val => Object.hasOwn(demographics.bin,val) && demographics.bin[val] !== '')){
+            console.log('all bins full');
+            demographics.next.classList.remove('no-display');
+            demographics.next.textContent = 'SUBMIT';
+        }
     }
     
     // update the demo-bin
@@ -66,7 +79,6 @@ function handleIteration(){
         demographics.element.oninput = handleGenderInput;
 
         demographics.element.setAttribute('placeholder', 'M or F')
-
 
     } else {    
         demographics.genderLocked = false;
@@ -92,8 +104,12 @@ function updateBin(demographics){
     console.log(nextElement);
     
 }
+
 // find BMR - previous input
 function handlePrev(e){
+    // lock activity level
+    activiy_locked = true;
+    tdee_selection.setAttribute('disabled',true)
     
     if(current_index > 0){
         current_index+=prev
@@ -120,46 +136,81 @@ function handlePrev(e){
 // find BMR - next input
 function handleNext(e){
 
-    if(current_index < demographics.inputs.length){
-        current_index+=next
-    }
+    if(demographics.next.textContent === 'NEXT'){
+        if(current_index < demographics.inputs.length){
+            current_index+=next
+        }
 
-    global_direction = next;
+        global_direction = next;
 
-     // update the demo-bin
-    updateBin(demographics)
-    // clear new input value
-    if(!demographics.bin[demographics['inputs'][current_index]]) {
-        demographics.element.value = ''
+        // update the demo-bin
+        updateBin(demographics)
+        // clear new input value
+        if(!demographics.bin[demographics['inputs'][current_index]]) {
+            demographics.element.value = ''
+        } else {
+            demographics.element.value = demographics.bin[demographics['inputs'][current_index]] || String.toString(demographics.bin[demographics['inputs'][current_index]])
+        }
+
+        console.log(current_index)
+        handleIteration()
+        
+
+        console.log(demographics.element)
+        console.log(demographics.bin)
     } else {
-        demographics.element.value = demographics.bin[demographics['inputs'][current_index]] || String.toString(demographics.bin[demographics['inputs'][current_index]])
+        // submit bmr to the board
+        handleBMRSubmission(demographics.bin);
+
+        // unlock activity level
+        activiy_locked = false;
+        unlockActivityLevel();
+        
+        // remove submit [next] button
+        demographics.next.classList.add('no-display');
     }
-
-    console.log(current_index)
-    handleIteration()
-    
-
-    console.log(demographics.element)
-    console.log(demographics.bin)
 }
 
+function handleBMRSubmission(bin){
+    delete bin.complete;
+    console.log(bin);
+}
+
+function unlockActivityLevel(locked) {
+
+    if(locked) {
+        console.error('TDEE activity level: Locked')
+    } else {
+        console.log("%cTDEE activity level: unlocked","color: lime; font-weight: bold;");
+    }
+
+    console.log(tdee_selection)
+    tdee_selection.removeAttribute('disabled');
+}
+
+// handleGenderInput
 function handleGenderInput(e){
 
-    let value = (e.target.value);
+    if(demographics['inputs'][current_index] === 'gender'){
+        let value = (e.target.value);
     
-    const isValid = /^(m|f)$/g.test(value);
+        const isValid = /^(m|f)$/g.test(value);
 
-    console.log(isValid)
-    if(!isValid){
-        console.log('is not valid')
-        e.target.value = ''
+        console.log(isValid)
+        if(!isValid){
+            console.log('is not valid')
+            e.target.value = ''
+        } else {
+            console.log('is valid')
+            e.target.value = value.toUpperCase();
+        }
     } else {
-        console.log('is valid')
-        e.target.value = value.toUpperCase();
+        e.preventDefault();
     }
     
 }
 
+// handleCompleted
 function handleCompleted(e){
     // empty value
     e.target.value = ''
