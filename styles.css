@@ -93,7 +93,6 @@ margin:1.5rem 0;
 #plate-container div.plate-section {
     display:flex;
     flex-direction: column;
-    justify-content: end;
 
     font-size:14pt;
     
@@ -108,6 +107,7 @@ margin:1.5rem 0;
 
 /* plate label */
 .plate-section > p {
+    z-index:998;
     mix-blend-mode:difference; 
     
     font-family: Arial, Helvetica, sans-serif;
@@ -149,6 +149,9 @@ div.plate-section:first-child{
     bottom:0;
     right:0;
 
+    justify-content: end;
+
+
 }
 
 /* carbs */
@@ -157,6 +160,8 @@ div.plate-section.second-child{
 
     top:0;
     right:0;
+
+    justify-content: start;
 
 }
 
@@ -167,6 +172,8 @@ div.plate-section.third-child{
     top:0;
     left:0;
 
+    justify-content: start;
+
 }
 
 /* fats */
@@ -176,17 +183,21 @@ div.plate-section:last-child{
     bottom:0;
     left:0;
 
+    justify-content: end;
+
+
 }
 
 /* plate indicators */
 .plate-section div.plate-indicator {
+    z-index:997;
+
     min-width:inherit;
 
     border:.25px solid ghostwhite;
 
-    animation: introduceMacros 2s forwards;
-
     transition:smooth !important;
+
 }
 
 /* keyframe animation  */
@@ -203,15 +214,16 @@ div.plate-section:last-child{
     }
    
 }
-
 /* indicators */
 
 /* proteins */
 [data-proteins-indicator] {
-    
     background-color:green;
 
+    animation: introduceMacros 1.5s forwards normal;
+
     /* height: 150px !important; */
+
 
 }
 
@@ -221,7 +233,10 @@ div.plate-section:last-child{
     
     background-color:yellow;
 
+    transform:rotate(180deg);
     /* height: 90px !important; */
+
+    animation: introduceMacros 1.5s 1s forwards normal;
 
 }
 
@@ -231,12 +246,18 @@ div.plate-section:last-child{
     
     /* height: 130px !important; */
 
+    animation: introduceMacros 1s 1.25s forwards normal;
 }
 
 /* alcohol */
 [data-alcohol-indicator] {
     background-color:red;
     
+    transform:rotate(180deg);
+
+    animation: introduceMacros 1.2s .5s forwards normal;
+
+
     /* height: 46px !important; */
 
 }
