@@ -284,7 +284,7 @@ function handleGenderInput(e){
     if(demographics['inputs'][current_index] === 'gender'){
         let value = (e.target.value);
     
-        const isValid = /^(m|f)$/g.test(value);
+        const isValid = /^(m|f)$/ig.test(value);
 
         console.log(isValid)
         if(!isValid){
