@@ -91,7 +91,7 @@ function handleIteration(){
         demographics.genderLocked = false;
         demographics.element.setAttribute('type', 'number');
     }
-
+    
     // if complete, update type to disabled input
     if(current_index > demographics['inputs'].length - 2) {
         // set value to completed
@@ -101,7 +101,7 @@ function handleIteration(){
 
         // if some values are empty, disclose missing values, else show COMPLETE (need to fix)
         Object.values(demographics.bin).filter(empty=>empty==='').length > 0 ? 
-        demographics.element.setAttribute('placeholder', `Missing: ${(Object.keys(demographics.bin).filter(k => k !== 'complete' && demographics.bin[k] === '' ? k : null).join`, `)}`) :
+        demographics.element.setAttribute('placeholder', `Missing: ${(demographics['inputs'].filter(k => k !== 'complete' && (demographics.bin[k] === '' || !Object.hasOwn(demographics.bin,k)) ? k : null).join`, `)}`) :
         demographics.element.setAttribute('placeholder', 'Complete');
 
         demographics.element.setAttribute('disabled',true)
@@ -214,7 +214,8 @@ function handleBMRSubmission(bin){
     console.log(bin.weight)
 
     // calculate client BMR
-    // calculateBMR(bin)
+    calculateBMR(bin)
+
 }
 
 function unlockActivityLevel(locked) {
@@ -275,27 +276,40 @@ function handleInputInteractions(){
     }
 }
 
-// function calculateBMR(bin){
-//     // validate bin
-//     if(!bin){
-//         console.error('error: check your bin')
-//         return 
-//     }
+function calculateBMR(bin){
 
-//     bin.age = +bin.age;
-//     bin.height = +bin.height
-//     bin.weight = parseFloat(bin.weight.toFixed(2))
+    // validate bin
+    if(!bin){
+        console.error('error: check your bin')
+        return 
+    }
+
+    console.log("BEFORE",bin)
+
     
-//     console.log(bin.age)
-//     console.log(bin.height)
-//     // formula
-//     let BMI_FORMULA = () => bin.gender === 'M' ? 
-//     global_BMR = (10 * bin.weight) + (6.25 * bin.height) - (5 * bin.age) + 5 :
-//     bin.gender === 'F' ? 
-//     global_BMR = (10 * bin.weight) + (6.25 * bin.height) - (5 * bin.age) - 161 :
-//     undefined;
 
-//     BMI_FORMULA()
-//     console.log(global_BMR);
+    console.log(bin)
+    bin.age = +bin.age;
+    bin.height = +bin.height
+    bin.weight = parseFloat(bin.weight.toFixed(2))
+    
+    console.log(bin.age)
+    console.log(bin.height)
+    
+    BMI_FORMULA(bin.height,bin.weight,bin.gender,bin.age);
 
-// }
+    if(global_BMR) global_BMR = Math.ceil(global_BMR)
+    console.log(global_BMR);
+
+    console.log("AFTER",bin)
+
+    demographics.bin = {};
+
+}
+
+// formula
+    let BMI_FORMULA = (height,weight,gender,age) => gender === 'M' ? 
+    global_BMR = (10 * weight) + (6.25 * height) - (5 * age) + 5 :
+    gender === 'F' ? 
+    global_BMR = (10 * weight) + (6.25 * height) - (5 * age) - 161 :
+    undefined;
