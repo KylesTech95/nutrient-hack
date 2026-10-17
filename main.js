@@ -9,10 +9,13 @@ let demographics = {
     bin:{height:null}, // user input/data
     genderLocked: false,
 }
+let global_BMR = undefined;
 // click prev/next buttons
 demographics.prev.onclick = handlePrev
 demographics.next.onclick = handleNext
 
+// update BMR height placeholder
+demographics['inputs'][current_index]==='height' ? demographics.element.setAttribute('placeholder',demographics['inputs'][current_index][0].toUpperCase() + demographics['inputs'][current_index].slice(1) + ' in inches (in)') : null;
 
 // calculate TDEE (BMR x Activity level)
 let activiy_locked = true;
@@ -22,7 +25,7 @@ const tdee_selection = document.getElementById('tdee-selection')
 
 
 // window events
-window.onbeforeunload = beforeUnload;
+// window.onbeforeunload = beforeUnload;
 
 
 
@@ -68,7 +71,11 @@ function handleIteration(){
     // update the demo-element
     demographics.element.id = `input-${demographics['inputs'][current_index]}`
     demographics.element.setAttribute('name', demographics['inputs'][current_index])
-    !demographics.genderLocked ? demographics.element.setAttribute('placeholder', demographics['inputs'][current_index][0].toUpperCase() + demographics['inputs'][current_index].slice(1)) : null;
+    !demographics.genderLocked ? demographics.element.setAttribute('placeholder', demographics['inputs'][current_index]==='height' ? 
+        demographics['inputs'][current_index][0].toUpperCase() + demographics['inputs'][current_index].slice(1) + ' in inches (in)' :
+        demographics['inputs'][current_index]==='weight' ? demographics['inputs'][current_index][0].toUpperCase() + demographics['inputs'][current_index].slice(1) + ' in pounds (lbs)' :
+        demographics['inputs'][current_index][0].toUpperCase() + demographics['inputs'][current_index].slice(1)
+    ) : null;
 
     // if gender, update type to Text
     if(current_index > demographics['inputs'].length - 3) {
@@ -90,10 +97,12 @@ function handleIteration(){
         // set value to completed
         demographics.element.value = 'Complete';
 
+        delete demographics.bin['complete']
+
         // if some values are empty, disclose missing values, else show COMPLETE (need to fix)
         Object.values(demographics.bin).filter(empty=>empty==='').length > 0 ? 
         demographics.element.setAttribute('placeholder', `Missing: ${(Object.keys(demographics.bin).filter(k => k !== 'complete' && demographics.bin[k] === '' ? k : null).join`, `)}`) :
-        demographics.element.setAttribute('placeholder', 'Completed');
+        demographics.element.setAttribute('placeholder', 'Complete');
 
         demographics.element.setAttribute('disabled',true)
         // demographics.element.oninput = handleCompleted;
@@ -117,6 +126,9 @@ function updateBin(demographics){
 function handlePrev(e){
     // lock activity level
     activiy_locked = true;
+
+    // update tdee_selection value & disable
+    tdee_selection.value = ""
     tdee_selection.setAttribute('disabled',true)
     
     if(current_index > 0){
@@ -188,8 +200,21 @@ function handleNext(e){
 }
 
 function handleBMRSubmission(bin){
+    // remove complete property from bin
     delete bin.complete;
-    console.log(bin);
+
+    console.log(bin.weight)
+
+    // convert weight from pounds to kg
+    bin.weight /= 2.205
+
+    // convert height from inches to cm
+    bin.height *= 2.54
+
+    console.log(bin.weight)
+
+    // calculate client BMR
+    // calculateBMR(bin)
 }
 
 function unlockActivityLevel(locked) {
@@ -249,3 +274,28 @@ function handleInputInteractions(){
         demographics.element.classList.add('already-there');
     }
 }
+
+// function calculateBMR(bin){
+//     // validate bin
+//     if(!bin){
+//         console.error('error: check your bin')
+//         return 
+//     }
+
+//     bin.age = +bin.age;
+//     bin.height = +bin.height
+//     bin.weight = parseFloat(bin.weight.toFixed(2))
+    
+//     console.log(bin.age)
+//     console.log(bin.height)
+//     // formula
+//     let BMI_FORMULA = () => bin.gender === 'M' ? 
+//     global_BMR = (10 * bin.weight) + (6.25 * bin.height) - (5 * bin.age) + 5 :
+//     bin.gender === 'F' ? 
+//     global_BMR = (10 * bin.weight) + (6.25 * bin.height) - (5 * bin.age) - 161 :
+//     undefined;
+
+//     BMI_FORMULA()
+//     console.log(global_BMR);
+
+// }

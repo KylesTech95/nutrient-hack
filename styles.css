@@ -50,6 +50,8 @@ body {
 
     overflow:auto;
 
+    padding: 0 .75rem;
+
     /* border:2px solid var(--color-secondary); */
 }
 
@@ -353,7 +355,7 @@ div.plate-section:last-child{
 /* input arrows */
 #input-container p {
     transition: .25s;
-    padding:.25rem;
+    padding:.75rem;
     
     font-size:14pt;
 
@@ -389,11 +391,11 @@ div.plate-section:last-child{
 
 input,select{
 
-    width:75%; 
+    width:66%; 
 
     outline:none;
 
-    padding:.35rem 0;
+    padding:.75rem 0;
 
     font-size:11pt;
 
@@ -428,4 +430,8 @@ select:hover {
 
 .already-there {
     color:#0f0 !important;
+}
+
+.bolder-text{
+    font-weight: bold;
 }
