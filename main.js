@@ -269,7 +269,7 @@ function calculateBMRAndActivity(e,bmr) {
     console.log(bmr)
 
     // update TDEE result
-    demographics.result2.textContent = `TDEE = ${result}`
+    demographics.result2.textContent && value > 0 ? demographics.result2.textContent = `TDEE = ${result}` : demographics.result2.textContent = `Choose an option`
 }
 
 // handleGenderInput
