@@ -231,7 +231,7 @@ function handleBMRSubmission(bin){
     console.log(bin.weight)
 
     // calculate client BMR
-    calculateBMR(bin)
+    calculateBMR(bin);
 
 }
 
@@ -243,8 +243,14 @@ function unlockActivityLevel(locked) {
         console.log("%cTDEE activity level: unlocked","color: lime; font-weight: bold;");
     }
 
-    console.log(tdee_selection)
     tdee_selection.removeAttribute('disabled');
+    
+    // click tdee
+    tdee_selection.click();
+
+    // scroll to bottom
+    window.scrollTo(0, document.body.scrollHeight);
+
 }
 
 function calculateBMRAndActivity(e,bmr) {
@@ -340,6 +346,9 @@ function calculateBMR(bin){
     demographics.bin = {};
 
     demographics.result.textContent = `BMR = ${global_BMR}`
+
+    // scroll to bottom
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 // formula
