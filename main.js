@@ -8,7 +8,10 @@ let demographics = {
     next:document.getElementById('next-arrow'),
     bin:{height:null}, // user input/data
     genderLocked: false,
+    result:document.querySelector('#bmr-result > h4'),
+    result2:document.querySelector('#tdee-result > h4'),
 }
+
 let global_BMR = undefined;
 // click prev/next buttons
 demographics.prev.onclick = handlePrev
@@ -27,6 +30,10 @@ const tdee_selection = document.getElementById('tdee-selection')
 // window events
 // window.onbeforeunload = beforeUnload;
 
+
+
+// calculate level of activity
+tdee_selection.onclick = (e) => calculateBMRAndActivity(e,global_BMR)
 
 
 // functions
@@ -124,12 +131,22 @@ function updateBin(demographics){
 
 // find BMR - previous input
 function handlePrev(e){
+    // clear BMR result on PREV click
+    demographics.result.textContent = '';
+
+    // if current idx is complete [last], set current idx to heihgt [0]
+    if(current_index === demographics['inputs'].length - 1 && activiy_locked === false){
+        current_index = 0;
+    }
+
     // lock activity level
     activiy_locked = true;
 
     // update tdee_selection value & disable
-    tdee_selection.value = ""
-    tdee_selection.setAttribute('disabled',true)
+    tdee_selection.value = "";
+    tdee_selection.setAttribute('disabled',true);
+    // clear tdee-result
+    demographics.result2.textContent = '';
     
     if(current_index > 0){
         current_index+=prev
@@ -138,20 +155,20 @@ function handlePrev(e){
     global_direction = prev;
 
     // update the demo-bin
-    updateBin(demographics)
+    updateBin(demographics);
     
-    handleInputInteractions()
+    handleInputInteractions();
 
-    console.log(current_index)
-    handleIteration()
+    console.log(current_index);
+    handleIteration();
 
-    console.log(demographics.element)
-    console.log(demographics.bin)
+    console.log(demographics.element);
+    console.log(demographics.bin);
 
-    handleInputInteractions()
+    handleInputInteractions();
 
     // focus on element
-    demographics.element.focus()
+    demographics.element.focus();
 }
 
 // find BMR - next input
@@ -230,6 +247,31 @@ function unlockActivityLevel(locked) {
     tdee_selection.removeAttribute('disabled');
 }
 
+function calculateBMRAndActivity(e,bmr) {
+    let select = e.target;
+    console.log(select)
+    console.log(select.value)
+
+    // store bmr in original
+    let original_bmr = Number(bmr.toString().slice());
+    let result;
+    let value = +select.value
+
+    
+
+    result = Math.ceil(bmr *= value);
+    console.log(result)
+
+
+    // send global_bmr to original
+    bmr = original_bmr;
+
+    console.log(bmr)
+
+    // update TDEE result
+    demographics.result2.textContent = `TDEE = ${result}`
+}
+
 // handleGenderInput
 function handleGenderInput(e){
 
@@ -258,6 +300,7 @@ function handleCompleted(e){
     e.target.value = ''
 }
 
+// Input interactions
 function handleInputInteractions(){
     // input interactions
     console.log(demographics['inputs'][current_index])
@@ -276,6 +319,7 @@ function handleInputInteractions(){
     }
 }
 
+// calculateBMR
 function calculateBMR(bin){
 
     // validate bin
@@ -284,27 +328,18 @@ function calculateBMR(bin){
         return 
     }
 
-    console.log("BEFORE",bin)
 
-    
-
-    console.log(bin)
     bin.age = +bin.age;
     bin.height = +bin.height
     bin.weight = parseFloat(bin.weight.toFixed(2))
     
-    console.log(bin.age)
-    console.log(bin.height)
-    
     BMI_FORMULA(bin.height,bin.weight,bin.gender,bin.age);
 
     if(global_BMR) global_BMR = Math.ceil(global_BMR)
-    console.log(global_BMR);
-
-    console.log("AFTER",bin)
 
     demographics.bin = {};
 
+    demographics.result.textContent = `BMR = ${global_BMR}`
 }
 
 // formula

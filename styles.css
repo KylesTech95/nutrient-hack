@@ -11,6 +11,7 @@
     --bg-secondary: #000;
     --bg-tertiary:rgb(255, 255, 146);
     --bg-special:#181818;
+    --bg-input-bmr: #fff;
 
     /* colors */
     --color-main:#000;
@@ -24,6 +25,7 @@
     --bg-secondary: #fff;
     --bg-tertiary:rgb(0,0,255);
     --bg-special:#e7e7e7;
+    --bg-input-bmr: #000;
 
 
     /* colors */
@@ -36,7 +38,6 @@ body {
 
     height:100%;
     width:100%;
-
 }
 
 #wrapper {
@@ -403,13 +404,34 @@ input,select{
 
     color:var(--color-main);
 
-    background-color:var(--bg-main);
+    background-color:var(--bg-input-bmr);
 }
 
 select:hover {
     cursor:pointer;
 }
 
+/* bmr result */
+#bmr-result,#tdee-result {
+    width:100%;
+    margin:0 auto;
+}
+
+#bmr-result h4,
+#tdee-result h4{
+    width:inherit;
+    text-align: center;
+
+    background-color: #000;
+
+    color:lime;
+
+    padding:.5rem 0;
+
+    font-size:24pt;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
 
 
 
@@ -434,4 +456,9 @@ select:hover {
 
 .bolder-text{
     font-weight: bold;
+}
+
+.no-highlight {
+  -webkit-user-select: none; /* Safari */
+  user-select: none;         /* Standard syntax (Chrome, Edge, Firefox, Opera) */
 }
