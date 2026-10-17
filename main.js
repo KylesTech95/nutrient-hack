@@ -22,7 +22,7 @@ const tdee_selection = document.getElementById('tdee-selection')
 
 
 // window events
-// window.onbeforeunload = beforeUnload;
+window.onbeforeunload = beforeUnload;
 
 
 
@@ -87,9 +87,19 @@ function handleIteration(){
 
     // if complete, update type to disabled input
     if(current_index > demographics['inputs'].length - 2) {
+        // set value to completed
+        demographics.element.value = 'Complete';
+
+        // if some values are empty, disclose missing values, else show COMPLETE (need to fix)
+        Object.values(demographics.bin).filter(empty=>empty==='').length > 0 ? 
+        demographics.element.setAttribute('placeholder', `Missing: ${(Object.keys(demographics.bin).filter(k => k !== 'complete' && demographics.bin[k] === '' ? k : null).join`, `)}`) :
         demographics.element.setAttribute('placeholder', 'Completed');
-        demographics.element.oninput = handleCompleted;
-    } 
+
+        demographics.element.setAttribute('disabled',true)
+        // demographics.element.oninput = handleCompleted;
+    } else {
+        demographics.element.removeAttribute('disabled')
+    }
 }
 }
 
@@ -117,7 +127,7 @@ function handlePrev(e){
 
     // update the demo-bin
     updateBin(demographics)
-
+    
     handleInputInteractions()
 
     console.log(current_index)
@@ -127,6 +137,9 @@ function handlePrev(e){
     console.log(demographics.bin)
 
     handleInputInteractions()
+
+    // focus on element
+    demographics.element.focus()
 }
 
 // find BMR - next input
@@ -167,6 +180,11 @@ function handleNext(e){
     }
 
     handleInputInteractions()
+
+    // focus on element
+    if(current_index !== demographics['inputs'].length - 1) {
+        demographics.element.focus()
+    }
 }
 
 function handleBMRSubmission(bin){
@@ -222,7 +240,7 @@ function handleInputInteractions(){
         || 
        (Object.hasOwn(demographics.bin,demographics['inputs'][current_index]) && 
         demographics.bin[demographics['inputs'][current_index]] === '')) {
-            
+
         console.log('not there')
         demographics.element.classList.remove('already-there');
         demographics.element.value = ''

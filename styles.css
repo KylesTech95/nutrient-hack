@@ -388,6 +388,9 @@ div.plate-section:last-child{
 }
 
 input,select{
+
+    width:75%; 
+
     outline:none;
 
     padding:.35rem 0;
