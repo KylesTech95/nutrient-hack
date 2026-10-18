@@ -18,7 +18,22 @@ let units = {
     fats:9,
     alcohol:7,
 }
+
+let number_of_meals = null;
+
 export default function handleMacros(tdee,type) {
+    const question = `How many meals or snacks do you plan to eat in 1 day?`
+    // prompt user - # of meals 
+    let howManyMeals;
+    const handlePrompt = () => howManyMeals = prompt(question);
+    handlePrompt()
+    // if canceled or meals is 0
+    if(!howManyMeals) {
+        handlePrompt();
+    } else {
+        number_of_meals = +howManyMeals;
+    }
+    
     // method
     // target portion by fitness-goal (fat loss | lean mass | balanced)
     current_portion = {...portions[type]};
@@ -34,12 +49,16 @@ export default function handleMacros(tdee,type) {
         const portion = Number((tdee * (current_portion[property]/100)).toFixed(2));
         console.log("result", portion);
 
+        let convertToGram = convertKcalToGram(Number(portion),units[property]);
         current_portion[property] = {
             kcal:Number(portion),
-            grams:convertKcalToGram(Number(portion),units[property])
+            grams:convertToGram,
+            per_meal: Number(convertToGram) / Number(number_of_meals),
         };
     }
 
+    
+    current_portion['number_of_meals'] = number_of_meals;
     console.log(current_portion)
 }
 

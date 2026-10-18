@@ -52,6 +52,8 @@ const interactive = {
 
 interactive.scroll.onclick = handleScrollUp;
 
+let initialMove = true;
+
 // ____________________________________________
 
 
@@ -74,6 +76,18 @@ function beforeUnload(e) {
     // trigger unsaved changes
     e.returnValue = '';
 }
+// confirm - go back
+function goBack(){
+    const message = 'Start over? Changes will not be saved.'
+    let bool = confirm(message)
+
+    if(!bool) {
+        console.log('user did no confirm. cancel out');
+        return false;
+    } else {
+        return true;
+    }
+}
 
 // find BMR - handle iteration
 function handleIteration(){
@@ -84,6 +98,8 @@ function handleIteration(){
         demographics.prev.classList.remove('no-display');
     } else {
         demographics.prev.classList.add('no-display');
+        // set initialMove to true
+        initialMove = true;
     }
     
     if(current_index < demographics.inputs.length - 1) {
@@ -166,6 +182,12 @@ function updateBin(demographics){
 
 // find BMR - previous input
 function handlePrev(e){
+    if(!initialMove && !goBack()){
+        console.log('handlePrev: cancel');
+        e.preventDefault();
+        return;
+    };
+
     // hide display scroll-button
     interactive.container.classList.add('no-display');
 
@@ -298,6 +320,7 @@ function unlockActivityLevel(locked) {
 }
 
 function calculateBMRAndActivity(e,bmr) {
+
     // hide display scroll-button
     interactive.container.classList.add('no-display');
 
@@ -359,6 +382,9 @@ function handlePercentageOptions(percentages) {
 }
 function handleOffsetClick(e,index) {
 
+    // initialMove is over - set to false
+    initialMove = false;
+    
     // restore offset
     restoreOffset()
 
@@ -455,6 +481,7 @@ function calculateTDEEWithOffset(offset) {
 
     // update demographics.result2 (tdee display)
     demographics.result2.textContent = `TDEE = ${(demographics.final_tdee)} kcal (${tdee_chunk}kcal ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`;
+    // update demographics.result3 (tdee display)
     demographics.result3.textContent = `Total consumption = ${(demographics.final_tdee)} kcal`;
 
     // display scroll-button
