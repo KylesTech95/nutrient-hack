@@ -404,14 +404,14 @@ function calculateTDEEWithOffset(offset) {
 
     let tdee = +global_tdee;
     let g_l = gain_or_loss[0]
-    let tdee_chunk = tdee * per;
+    let tdee_chunk = +((tdee * per).toFixed(2));
 
 
     // update demographics final tdee
     demographics.final_tdee = g_l === 'LOSS' ?  tdee -= tdee_chunk : tdee += tdee_chunk ;
 
     // update demographics.result2 (tdee display)
-    demographics.result2.textContent = `TDEE = ${demographics.final_tdee} kcal`
+    demographics.result2.textContent = `TDEE = ${demographics.final_tdee} kcal (${tdee_chunk} ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`
 }
 // handleGenderInput
 function handleGenderInput(e){
