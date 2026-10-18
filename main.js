@@ -24,6 +24,11 @@ demographics['inputs'][current_index]==='height' ? demographics.element.setAttri
 let activiy_locked = true;
 // tdee input [select]
 const tdee_selection = document.getElementById('tdee-selection')
+
+
+// offset tiles
+const offsetTiles = [...document.querySelectorAll('.offset-option')];
+let offset_locked = true;
 // ____________________________________________
 
 
@@ -131,6 +136,16 @@ function updateBin(demographics){
 
 // find BMR - previous input
 function handlePrev(e){
+    
+    // disable tiles
+    offset_locked = true;
+    offsetTiles.map(tile => {
+        
+        tile.classList.remove('offset-clicked')
+        // remove class
+        tile.classList.add('unclickable');
+    })
+
     // clear BMR result on PREV click
     demographics.result.textContent = '';
 
@@ -246,7 +261,7 @@ function unlockActivityLevel(locked) {
     tdee_selection.removeAttribute('disabled');
     
     // click tdee
-    tdee_selection.click();
+    // tdee_selection.click();
 
     // scroll to bottom
     window.scrollTo(0, document.body.scrollHeight);
@@ -275,9 +290,37 @@ function calculateBMRAndActivity(e,bmr) {
     console.log(bmr)
 
     // update TDEE result
-    demographics.result2.textContent && value > 0 ? demographics.result2.textContent = `TDEE = ${result}` : demographics.result2.textContent = `Choose an option`
+    demographics.result2.textContent && value > 0 ? demographics.result2.textContent = `TDEE = ${result} kcal` : demographics.result2.textContent = `Choose an option`;
+
+    // unlock offset
+    offset_locked = false;
+    unlockOffset()
 }
 
+function unlockOffset() {
+    if(offset_locked) {
+        console.error('error: offset is locked');
+        return;
+    }
+
+    offsetTiles.map(tile => {
+        // remove class
+        tile.classList.remove('unclickable')
+
+        // click
+        tile.onclick = handleOffsetClick;
+    })
+    
+
+}
+
+function handleOffsetClick(e) {
+    offsetTiles.map(tile => tile.classList.remove('offset-clicked'))
+    const tile = e.currentTarget;
+
+    tile.classList.add('offset-clicked')
+
+}
 // handleGenderInput
 function handleGenderInput(e){
 
@@ -345,14 +388,14 @@ function calculateBMR(bin){
 
     demographics.bin = {};
 
-    demographics.result.textContent = `BMR = ${global_BMR}`
+    demographics.result.textContent = `BMR = ${global_BMR} kcal`
 
     // scroll to bottom
     window.scrollTo(0, document.body.scrollHeight);
 }
 
 // formula
-    let BMI_FORMULA = (height,weight,gender,age) => gender === 'M' ? 
+let BMI_FORMULA = (height,weight,gender,age) => gender === 'M' ? 
     global_BMR = (10 * weight) + (6.25 * height) - (5 * age) + 5 :
     gender === 'F' ? 
     global_BMR = (10 * weight) + (6.25 * height) - (5 * age) - 161 :

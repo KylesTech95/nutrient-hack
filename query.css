@@ -6,6 +6,9 @@
     width:250px;
   }
 
+  #warpper{
+    padding: 0 1rem;
+  }
   /* keyframe */
   @keyframes spinPlate {
     0% {
@@ -47,7 +50,7 @@
 }
 
 .instruction-detail{
-    text-align: center;
+    text-align: start;
 }
 
 
@@ -55,5 +58,14 @@
 /* bmr result */
 #bmr-result h4, #tdee-result h4{
    font-size:16pt;
+}
+
+.offset-option {
+    height:100px;
+    width:100px;
+}
+
+.offset-option p {
+    font-size: 9pt
 }
 }

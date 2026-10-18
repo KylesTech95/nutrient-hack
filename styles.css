@@ -5,6 +5,23 @@
 }
 
 /* root directory */
+:root {
+    --bg-main:#000;
+    --bg-secondary: #fff;
+    --bg-tertiary:rgb(0,0,255);
+    --bg-special:#e7e7e7;
+    --bg-input-bmr: #000;
+
+
+    /* colors */
+    --color-main:#fff;
+    --color-secondary: #000;
+    --color-notification: rgb(255, 0, 0);
+    --color-error: #f00;
+    --color-offset-tile: #000;
+
+}
+@media (prefers-color-scheme: dark) {
 :root{
     /* background */
     --bg-main:ghostwhite;
@@ -18,19 +35,7 @@
     --color-secondary: #fff;
     --color-error: #f00;
     --color-notification: #0f0;
-}
-@media (prefers-color-scheme: dark) {
-:root {
-    --bg-main:#000;
-    --bg-secondary: #fff;
-    --bg-tertiary:rgb(0,0,255);
-    --bg-special:#e7e7e7;
-    --bg-input-bmr: #000;
-
-
-    /* colors */
-    --color-main:#fff;
-    --color-secondary: #000;
+    --color-offset-tile: #f00;
 }
 }
 body {
@@ -72,10 +77,12 @@ margin:1.5rem 0;
 }
 #about-container h3 em {
     font-size:21pt;
+    font-family: Arial, Helvetica, sans-serif;
 }
 #about-container h3 p {
     margin-top:.5rem;
     line-height: .28in;
+    font-family: Arial, Helvetica, sans-serif;
 }
 #about-container h3{
     color:var(--color-secondary);
@@ -321,6 +328,9 @@ div.plate-section:last-child{
     margin-top:2rem;
 
 }
+.instruction-detail,.question {
+    font-family:Arial, Helvetica, sans-serif;
+}
 .instruction-detail{
     margin:.5rem 0;
 
@@ -334,7 +344,7 @@ div.plate-section:last-child{
 
     font-size:14pt;
 
-    color:var(--bg-tertiary)
+    color:var(--bg-tertiary);
 
 }
 #input-container,#input-container2 {
@@ -434,16 +444,79 @@ select:hover {
 }
 
 
+/* offset */
+#offset-list-container {
+    width:100%;
+    height:100%;
 
+    margin-top:.75rem; 
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
 
+    min-height:25vh;
 
+    animation:spreadTiles 1s forwards normal ease-out;
+}
+.offset-option:hover {
+    cursor:pointer;
+    transform: scale(.98);
+}
+.offset-option{
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    gap:8px;
 
+    background-color: var(--bg-secondary);
+    color:var(--color-secondary);
+
+    width:125px;
+    height:125px;
+
+    border-radius: 12px;
+
+    padding:.5rem;
+
+    text-align: center;
+
+    transition: .5s;
+
+    box-shadow: 0 .25rem 8px .9px var(--color-notification)
+    /* border:.5px solid var(--bg-main); */
+}
+
+.offset-list-container {
+    width:100%;
+}
+.offset-option p {
+    border-bottom: .25px solid var(--color-error);
+    color:var(--color-secondary);
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+
+/* spreadtiles keyframe */
+@keyframes spreadTiles {
+    0% {
+        gap:.5rem;
+
+    }
+    100% {
+        gap:2rem;
+    }
+}
 
 /* special classes */
 
 /* no display */
 .no-display {
-    display:none;
+    display:none !important;
 }
 
 .container-border {
@@ -461,4 +534,23 @@ select:hover {
 .no-highlight {
   -webkit-user-select: none; /* Safari */
   user-select: none;         /* Standard syntax (Chrome, Edge, Firefox, Opera) */
+}
+
+.font-xsm {
+    font-size:9pt;
+}
+
+.font-sm {
+    font-size: 11;
+}
+
+.unclickable {
+  opacity: .36;
+  background-color: rgba(128, 128, 128, 0.552) !important;
+  pointer-events: none; /* Disables all mouse clicks, hovers, and drags */
+  cursor: default;     /* Resets the cursor so it doesn't look clickable */
+}
+
+.offset-clicked {
+    border:8px double var(--color-offset-tile) !important;
 }
