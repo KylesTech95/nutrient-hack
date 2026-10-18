@@ -1,3 +1,5 @@
+import handleMacros from "./macros.js"
+
 // find BMR
 let next = 1, prev = -1, current_index = 0;
 let global_direction = undefined;
@@ -13,6 +15,13 @@ let demographics = {
     result2:document.querySelector('#tdee-result > h4'),
     offset:'',
     final_tdee:'',
+}
+let fitness_goal = {
+    0:'fat_loss',
+    1:'fat_loss2',
+    2:'lean_mass',
+    3:'lean_mass2',
+    4:'balanced'
 }
 
 let global_BMR = undefined;
@@ -296,12 +305,12 @@ function unlockOffset() {
         return;
     }
 
-    offsetTiles.map(tile => {
+    offsetTiles.map((tile,i) => {
         // remove class
         tile.classList.remove('unclickable')
 
         // click
-        tile.onclick = handleOffsetClick;
+        tile.onclick = e => handleOffsetClick(e,i);
     })
     
 
@@ -316,7 +325,7 @@ function handlePercentageOptions(percentages) {
 
     return numbers;
 }
-function handleOffsetClick(e) {
+function handleOffsetClick(e,index) {
 
     // restore offset
     restoreOffset()
@@ -362,7 +371,8 @@ function handleOffsetClick(e) {
             // store in demographics[offset]
             let [per,type] = [divTag.children[1].textContent.slice(0,-1),tile.children[2].textContent];
             demographics.offset = `${per} ${type}`;
-            calculateTDEEWithOffset(demographics.offset)
+            calculateTDEEWithOffset(demographics.offset);
+            handleMacros(demographics.final_tdee, fitness_goal[index]);
 
             // 6. update divtag class
             divTag.classList.add('div-tag')
@@ -390,6 +400,7 @@ function handleOffsetClick(e) {
 
                         if(demographics.offset && demographics.offset !== '') {
                         calculateTDEEWithOffset(demographics.offset);
+                        handleMacros(demographics.final_tdee, fitness_goal[index])
                     }
                 }
             })
@@ -411,7 +422,7 @@ function calculateTDEEWithOffset(offset) {
     demographics.final_tdee = g_l === 'LOSS' ?  tdee -= tdee_chunk : tdee += tdee_chunk ;
 
     // update demographics.result2 (tdee display)
-    demographics.result2.textContent = `TDEE = ${demographics.final_tdee} kcal (${tdee_chunk} ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`
+    demographics.result2.textContent = `TDEE = ${(demographics.final_tdee)} kcal (${tdee_chunk} ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`
 }
 // handleGenderInput
 function handleGenderInput(e){
