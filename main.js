@@ -1,6 +1,7 @@
 // find BMR
 let next = 1, prev = -1, current_index = 0;
 let global_direction = undefined;
+let global_tdee;
 let demographics = {
     inputs:['height','weight','age','gender','complete'],
     element:document.querySelector('.demographics-input'),
@@ -10,6 +11,8 @@ let demographics = {
     genderLocked: false,
     result:document.querySelector('#bmr-result > h4'),
     result2:document.querySelector('#tdee-result > h4'),
+    offset:'',
+    final_tdee:'',
 }
 
 let global_BMR = undefined;
@@ -27,6 +30,7 @@ const tdee_selection = document.getElementById('tdee-selection')
 
 
 // offset tiles
+const original_percentages = ['15% - 20%','21% - 25%', '5% - 10%', '11% - 15%', '5% - 10%']
 const offsetTiles = [...document.querySelectorAll('.offset-option')];
 let offset_locked = true;
 // ____________________________________________
@@ -70,7 +74,6 @@ function handleIteration(){
         demographics.next.classList.add('no-display');
 
         if(demographics['inputs'].slice(0,-1).every(val => Object.hasOwn(demographics.bin,val) && demographics.bin[val] !== '')){
-            console.log('all bins full');
             demographics.next.classList.remove('no-display');
             demographics.next.textContent = 'SUBMIT';
         }
@@ -130,17 +133,17 @@ function updateBin(demographics){
     demographics.bin[`${demographics['inputs'][current_index-(global_direction)]}`] = demographics.element.value;
     
     let nextElement = document.getElementById(`${demographics['inputs'][current_index]}-input`);
-    console.log(nextElement);
-    
 }
 
 // find BMR - previous input
 function handlePrev(e){
+    // restore offset
+    restoreOffset();
     
     // disable tiles
     offset_locked = true;
     offsetTiles.map(tile => {
-        
+
         tile.classList.remove('offset-clicked')
         // remove class
         tile.classList.add('unclickable');
@@ -174,11 +177,7 @@ function handlePrev(e){
     
     handleInputInteractions();
 
-    console.log(current_index);
     handleIteration();
-
-    console.log(demographics.element);
-    console.log(demographics.bin);
 
     handleInputInteractions();
 
@@ -205,12 +204,9 @@ function handleNext(e){
             demographics.element.value = demographics.bin[demographics['inputs'][current_index]] || String.toString(demographics.bin[demographics['inputs'][current_index]])
         }
 
-        console.log(current_index)
         handleIteration()
         
 
-        console.log(demographics.element)
-        console.log(demographics.bin)
     } else {
         // submit bmr to the board
         handleBMRSubmission(demographics.bin);
@@ -235,15 +231,12 @@ function handleBMRSubmission(bin){
     // remove complete property from bin
     delete bin.complete;
 
-    console.log(bin.weight)
-
     // convert weight from pounds to kg
     bin.weight /= 2.205
 
     // convert height from inches to cm
     bin.height *= 2.54
 
-    console.log(bin.weight)
 
     // calculate client BMR
     calculateBMR(bin);
@@ -269,9 +262,10 @@ function unlockActivityLevel(locked) {
 }
 
 function calculateBMRAndActivity(e,bmr) {
+    // restore offsets
+    restoreOffset()
+
     let select = e.target;
-    console.log(select)
-    console.log(select.value)
 
     // store bmr in original
     let original_bmr = Number(bmr.toString().slice());
@@ -279,15 +273,14 @@ function calculateBMRAndActivity(e,bmr) {
     let value = +select.value
 
     
-
+    // tdee = BMR x Activity level
     result = Math.ceil(bmr *= value);
-    console.log(result)
+    
+    global_tdee = result;
 
 
     // send global_bmr to original
     bmr = original_bmr;
-
-    console.log(bmr)
 
     // update TDEE result
     demographics.result2.textContent && value > 0 ? demographics.result2.textContent = `TDEE = ${result} kcal` : demographics.result2.textContent = `Choose an option`;
@@ -314,12 +307,111 @@ function unlockOffset() {
 
 }
 
+function handlePercentageOptions(percentages) {
+    let numbers = percentages.match(/\d+/g);
+    // convert string to number
+    numbers = numbers.map(n=>Number(n));
+
+    numbers.splice(1,0,numbers.reduce((a,b)=>a+b)/2);
+
+    return numbers;
+}
 function handleOffsetClick(e) {
-    offsetTiles.map(tile => tile.classList.remove('offset-clicked'))
+
+    // restore offset
+    restoreOffset()
+
     const tile = e.currentTarget;
 
     tile.classList.add('offset-clicked')
 
+    // update tile percentage -> options for client
+    let percentages = [...tile.children][1];
+    
+    if(percentages.textContent && !percentages.classList.contains('div-tag')){
+        // method that returns an array of percentages to choose from
+        let percentage_options = handlePercentageOptions(percentages.textContent);
+
+        // if div-tag is open
+            // 1. Create a new <div> element
+            const divTag = document.createElement("div");
+
+            // 2. Copy over the contents
+            divTag.innerHTML = '';
+
+            // 3. Optional: Copy over attributes (like classes or IDs)
+            for (const attr of percentages.attributes) {
+            divTag.setAttribute(attr.name, attr.value);
+            }
+
+            // 4. Swap the <p> tag with the new <div> in the DOM hierarchy
+            percentages.replaceWith(divTag);
+
+            // 5. create p tags & store inside div
+            percentage_options.map(n => {
+                let pTag = document.createElement('p');
+                pTag.textContent = n + "%"
+
+            // repalce children within div
+                divTag.appendChild(pTag);
+                
+            });
+
+            // lock the average - DEFAULT
+            divTag.children[1].classList.add('lock-percentage');
+            // store in demographics[offset]
+            let [per,type] = [divTag.children[1].textContent.slice(0,-1),tile.children[2].textContent];
+            demographics.offset = `${per} ${type}`;
+            calculateTDEEWithOffset(demographics.offset)
+
+            // 6. update divtag class
+            divTag.classList.add('div-tag')
+
+            // 7. expand the tile
+            tile.classList.add('expand-tile')
+
+            // 8. divTag p click
+            let ops = [...divTag.children].map(o => {
+
+                o.onclick = e => {
+                        let restore = [...divTag.children].map(h => h.classList.remove('lock-percentage'));
+                        
+                        // prevent tile click
+                        e.stopPropagation();
+
+                        // lock percentage 
+                        e.target.classList.add('lock-percentage');
+
+                        // get target percentage and type [LOSS | GAIN]
+                        let [per,type] = [e.target.textContent, tile.children[2].textContent];
+
+                        // store in demographics[offset]
+                        demographics.offset = `${per} ${type}`;
+
+                        if(demographics.offset && demographics.offset !== '') {
+                        calculateTDEEWithOffset(demographics.offset);
+                    }
+                }
+            })
+    }
+    
+}
+
+function calculateTDEEWithOffset(offset) {
+    let get_percentage = offset.slice().match(/^\d+/);
+    let gain_or_loss = offset.slice().match(/(GAIN|LOSS)/);
+    let per = (Number(get_percentage[0]) / 100);
+
+    let tdee = +global_tdee;
+    let g_l = gain_or_loss[0]
+    let tdee_chunk = tdee * per;
+
+
+    // update demographics final tdee
+    demographics.final_tdee = g_l === 'LOSS' ?  tdee -= tdee_chunk : tdee += tdee_chunk ;
+
+    // update demographics.result2 (tdee display)
+    demographics.result2.textContent = `TDEE = ${demographics.final_tdee} kcal`
 }
 // handleGenderInput
 function handleGenderInput(e){
@@ -329,7 +421,6 @@ function handleGenderInput(e){
     
         const isValid = /^(m|f)$/ig.test(value);
 
-        console.log(isValid)
         if(!isValid){
             console.log('is not valid')
             e.target.value = ''
@@ -352,14 +443,11 @@ function handleCompleted(e){
 // Input interactions
 function handleInputInteractions(){
     // input interactions
-    console.log(demographics['inputs'][current_index])
-    console.log(demographics.bin)
     if(!Object.hasOwn(demographics.bin,demographics['inputs'][current_index])
         || 
        (Object.hasOwn(demographics.bin,demographics['inputs'][current_index]) && 
         demographics.bin[demographics['inputs'][current_index]] === '')) {
 
-        console.log('not there')
         demographics.element.classList.remove('already-there');
         demographics.element.value = ''
     } else {
@@ -400,3 +488,28 @@ let BMI_FORMULA = (height,weight,gender,age) => gender === 'M' ?
     gender === 'F' ? 
     global_BMR = (10 * weight) + (6.25 * height) - (5 * age) - 161 :
     undefined;
+
+// restore offset
+function restoreOffset(){
+    offsetTiles.map((t,index )=> {
+        // remove offset borders | target indication
+        t.classList.remove('offset-clicked');
+        // remove expanded class
+        t.classList.remove('expand-tile');
+
+        // store original percentages
+        let p = t.children[1];
+
+        // if div-tag exists
+        if(p.classList.contains('div-tag')){
+            // create new p tag
+            let new_p_tag = document.createElement('p');
+            // update textcontent to the percentage by index
+            new_p_tag.textContent = original_percentages[index];
+
+            // remove [div-tag] div element
+            p.remove();
+            t.children[1].before(new_p_tag);
+        }
+    })
+}
