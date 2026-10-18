@@ -13,6 +13,7 @@ let demographics = {
     genderLocked: false,
     result:document.querySelector('#bmr-result > h4'),
     result2:document.querySelector('#tdee-result > h4'),
+    result3:document.querySelector('#total-calorie-result > h4'),
     offset:'',
     final_tdee:'',
 }
@@ -42,12 +43,21 @@ const tdee_selection = document.getElementById('tdee-selection')
 const original_percentages = ['15% - 20%','21% - 25%', '5% - 10%', '11% - 15%', '5% - 10%']
 const offsetTiles = [...document.querySelectorAll('.offset-option')];
 let offset_locked = true;
+
+// interactive buttons 
+const interactive = {
+    container:document.getElementById('interactive-scroll-container'),
+    scroll:document.getElementById('scroll-btn')
+}
+
+interactive.scroll.onclick = handleScrollUp;
+
 // ____________________________________________
 
 
 // window events
 // window.onbeforeunload = beforeUnload;
-
+window.onscroll = handleWindowScroll
 
 
 // calculate level of activity
@@ -135,7 +145,17 @@ function handleIteration(){
     }
 }
 }
-
+function handleWindowScroll(e) {
+    // if offset selection is enabled
+    if(!offset_locked && document.querySelector('.div-tag')) {
+        // detect end of page
+        if((window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight*.75)) {
+            interactive.container.classList.remove('no-display');
+        } else {
+            interactive.container.classList.add('no-display')
+        }
+    }
+}
 // update demo-bin
 function updateBin(demographics){
     // update value on next or previous
@@ -146,6 +166,9 @@ function updateBin(demographics){
 
 // find BMR - previous input
 function handlePrev(e){
+    // hide display scroll-button
+    interactive.container.classList.add('no-display');
+
     // restore offset
     restoreOffset();
     
@@ -158,8 +181,6 @@ function handlePrev(e){
         tile.classList.add('unclickable');
     })
 
-    // clear BMR result on PREV click
-    demographics.result.textContent = '';
 
     // if current idx is complete [last], set current idx to heihgt [0]
     if(current_index === demographics['inputs'].length - 1 && activiy_locked === false){
@@ -172,8 +193,14 @@ function handlePrev(e){
     // update tdee_selection value & disable
     tdee_selection.value = "";
     tdee_selection.setAttribute('disabled',true);
+
+
+    // clear BMR result on PREV click
+    demographics.result.textContent = '';
     // clear tdee-result
     demographics.result2.textContent = '';
+    // clear total-calorie-result
+    demographics.result3.textContent = '';
     
     if(current_index > 0){
         current_index+=prev
@@ -271,6 +298,11 @@ function unlockActivityLevel(locked) {
 }
 
 function calculateBMRAndActivity(e,bmr) {
+    // hide display scroll-button
+    interactive.container.classList.add('no-display');
+
+    // clear total-calorie-result
+    demographics.result3.textContent = '';
     // restore offsets
     restoreOffset()
 
@@ -422,7 +454,12 @@ function calculateTDEEWithOffset(offset) {
     demographics.final_tdee = g_l === 'LOSS' ?  tdee -= tdee_chunk : tdee += tdee_chunk ;
 
     // update demographics.result2 (tdee display)
-    demographics.result2.textContent = `TDEE = ${(demographics.final_tdee)} kcal (${tdee_chunk} ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`
+    demographics.result2.textContent = `TDEE = ${(demographics.final_tdee)} kcal (${tdee_chunk}kcal ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`;
+    demographics.result3.textContent = `Total consumption = ${(demographics.final_tdee)} kcal`;
+
+    // display scroll-button
+    interactive.container.classList.remove('no-display');
+
 }
 // handleGenderInput
 function handleGenderInput(e){
@@ -523,4 +560,18 @@ function restoreOffset(){
             t.children[1].before(new_p_tag);
         }
     })
+}
+
+function handleScrollUp(e) {
+    const target = e.target || interactive.scroll;
+
+    if(!target) {
+        console.error('error: check target item');
+        return;
+    }
+
+    interactive.container.classList.add('no-display');
+
+    // scroll to top of page
+    window.scrollTo(0,0)
 }

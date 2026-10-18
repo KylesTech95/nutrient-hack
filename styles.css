@@ -11,6 +11,7 @@
     --bg-tertiary:rgb(0,0,255);
     --bg-special:#e7e7e7;
     --bg-input-bmr: #000;
+    --bg-interactive:#fff;
 
 
     /* colors */
@@ -29,6 +30,7 @@
     --bg-tertiary:rgb(255, 255, 146);
     --bg-special:#181818;
     --bg-input-bmr: #fff;
+    --bg-interactive:#000;
 
     /* colors */
     --color-main:#000;
@@ -422,12 +424,14 @@ select:hover {
 }
 
 /* bmr result */
-#bmr-result,#tdee-result {
+#bmr-result,#tdee-result,
+#total-calorie-result {
     width:100%;
     margin:0 auto;
 }
 
 #bmr-result h4,
+#total-calorie-result h4,
 #tdee-result h4{
     width:inherit;
     text-align: center;
@@ -514,6 +518,67 @@ select:hover {
     }
 }
 
+
+.div-tag {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap:9px;
+}
+.div-tag p {
+    z-index: 999;
+
+    color: var(--color-notification);
+
+    font-size: 12pt !important;
+
+    padding:6px;
+
+    border: 2px dotted var(--color-secondary);
+    border-radius: 4px;
+    
+}
+
+.div-tag p:hover{
+    background-color: var(--bg-main) !important;
+    color:var(--color-main) !important;
+}
+
+/* interactive btn */
+
+.btn-container {
+    position:fixed;
+
+    display:flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+
+    bottom:5px;
+    right:5px;
+}
+.btn-label {
+    font-family: Arial, Helvetica, sans-serif;
+
+    color:var(--bg-main);
+}
+.interactive-button:hover{
+    transform: scale(.9);
+    cursor: pointer;
+}
+#scroll-btn {
+    background-color:var(--bg-interactive);
+}
+
+.interactive-button {
+    width:55px;
+    height:55px;
+    
+    border-radius:50%;
+    
+    z-index: 999;
+}
 /* special classes */
 
 /* no display */
@@ -559,34 +624,6 @@ select:hover {
 
 .offset-clicked {
     border:8px double var(--color-offset-tile) !important;
-}
-
-.div-tag {
-    display:flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap:9px;
-}
-.div-tag p {
-    z-index: 999;
-
-    color: var(--color-notification);
-
-    font-size: 12pt !important;
-
-    padding:6px;
-
-    
-
-    border: 2px dotted var(--color-secondary);
-    border-radius: 4px;
-    
-}
-
-.div-tag p:hover{
-    background-color: var(--bg-main) !important;
-    color:var(--color-main) !important;
 }
 
 .lock-percentage {
