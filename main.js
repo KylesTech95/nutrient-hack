@@ -1,4 +1,4 @@
-8import {handleMacros, hideMealPlanner} from "./macros.js"
+import {handleMacros, hideMealPlanner} from "./macros.js"
 import foodFacts from "./foodfacts.js";
 
 // test food facts
