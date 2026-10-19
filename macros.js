@@ -1,11 +1,17 @@
 import { restoreOffset, lockOffset, demographics, interactive } from "./main.js";
+import { foods } from "./foods.js";
 
 const tdee_selection = document.getElementById('tdee-selection');
-const mealPlanContainer = document.getElementById('meal-plan-container');
+export const mealPlanContainer = document.getElementById('meal-plan-container');
 const totalGramsContainer = document.getElementById('total-grams-container');
 const foodSelectionContainer = document.getElementById('food-selection-container');
 const currentPlateContainer = document.getElementById('current-plate-container');
 const targetGramsContainer = document.getElementById('target-grams-container');
+export const search = {
+    filter: document.getElementById('food-selection-filter'),
+    select:document.getElementById('food-selection-result-container'),
+    results:document.getElementById('search-results-container'),
+}
 // get children from the containers above & store in variable
 let children = {
         total:[...totalGramsContainer.children],
@@ -35,6 +41,11 @@ let units = {
 }
 
 let number_of_meals = null;
+
+
+// search results
+search.filter.oninput = searchFood;
+
 
 export function handleMacros(tdee,type) {
     const question = `How many meals or snacks do you plan to eat in 1 day?`
@@ -157,4 +168,79 @@ function showMealPlanner(){
 }
 export function hideMealPlanner(){
     mealPlanContainer.classList.add('no-display');
+}
+
+// search filter
+function searchFood(e) {
+
+    clearResults()
+
+    let f, matches;
+    if(foods) {
+        // copy foods
+        f = [...foods]
+        
+        matches = f.filter((item,i) => {
+            if(new RegExp(e.target.value,'i').test(item.item)){
+                return item;
+            }
+        })
+        
+    };
+
+    console.log(matches);
+
+    matches.map(match => {
+        let li = createSearchResult(match);
+        search.results.append(li);
+
+        li.onclick = selectFood;
+    })
+
+    if(e.target.value === '') clearResults();
+
+}
+
+function createSearchResult(item) {
+
+    let li = document.createElement('li');
+    let food = document.createElement('p');
+    let proteins = document.createElement('p');
+    let carbs = document.createElement('p');
+    let fats = document.createElement('p');
+
+    food.textContent = item.item;
+    proteins.textContent = 'P - ' + item.proteins;
+    carbs.textContent = 'C - ' + item.carbs;
+    fats.textContent = 'F - ' + item.fats;
+
+    food.classList.add('column-label');
+    proteins.classList.add('column-label');
+    carbs.classList.add('column-label');
+    fats.classList.add('column-label');
+    
+    proteins.setAttribute('--data-set', 'proteins');
+    carbs.setAttribute('--data-set', 'carbs');
+    fats.setAttribute('--data-set', 'fats');
+
+    let arr = [food,proteins,carbs,fats]
+    li.append(...arr)
+
+    return li;
+}
+
+export function clearfoodItems(arr) {
+    search.filter.value = '';
+
+    return arr.map(a => a.remove());
+}
+
+export function clearResults(){
+    
+    return [...search.results.children].map(c => c.remove());
+}
+
+function selectFood(item) {
+    let cloned = (item.currentTarget).cloneNode(true);
+    search.select.append(cloned);
 }

@@ -45,6 +45,10 @@
    
 }
 
+#search-results-container li p{
+    font-size:11pt;
+}
+
 .plate-section > p{
     font-size:12pt; 
 }
@@ -79,7 +83,7 @@
     width:75%;
 }
 
-#total-grams-container,#total-grams-container,#current-plate-container, #food-selection-container {
+#total-grams-container,#search-results-container,#total-grams-container,#current-plate-container, #food-selection-container {
     display:flex;
 
 }

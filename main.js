@@ -1,4 +1,4 @@
-import {handleMacros, hideMealPlanner} from "./macros.js"
+import {handleMacros, hideMealPlanner, clearResults, mealPlanContainer, clearfoodItems, search} from "./macros.js"
 import foodFacts from "./foodfacts.js";
 
 // test food facts
@@ -62,7 +62,7 @@ let initialMove = true;
 
 
 // window events
-// window.onbeforeunload = beforeUnload;
+window.onbeforeunload = beforeUnload;
 window.onscroll = handleWindowScroll
 
 
@@ -196,6 +196,10 @@ function handlePrev(e){
     // hide meal planner
     hideMealPlanner();
 
+    // hide serach results and chosen items
+    clearResults()
+    clearfoodItems([...search.select.children])
+
     // hide display scroll-button
     interactive.container.classList.add('no-display');
 
@@ -223,7 +227,6 @@ function handlePrev(e){
     // update tdee_selection value & disable
     tdee_selection.value = "";
     tdee_selection.setAttribute('disabled',true);
-
 
     // clear BMR result on PREV click
     demographics.result.textContent = '';
@@ -328,9 +331,12 @@ function unlockActivityLevel(locked) {
 }
 
 function calculateBMRAndActivity(e,bmr) {
-
     // hide meal planner
     hideMealPlanner();
+
+    // hide serach results and chosen items
+    clearResults()
+    clearfoodItems([...search.select.children])
 
     // hide display scroll-button
     interactive.container.classList.add('no-display');
@@ -363,10 +369,13 @@ function calculateBMRAndActivity(e,bmr) {
         // unlock offset
         offset_locked = false;
         unlockOffset();
+        select.setAttribute('disabled',true)
     } else {
         console.error('error: select a valid option');
         restoreOffset();
         lockOffset();
+        select.removeAttribute('disabled')
+
     }
 }
 export function lockOffset(){
