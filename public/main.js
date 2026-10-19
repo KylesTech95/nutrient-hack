@@ -641,6 +641,6 @@ function handleScrollTarget(e) {
 
     interactive.container.classList.add('no-display');
 
-    location.href = location.origin + "#total-calorie-result"
+    location.href = location.href + "#total-calorie-result"
 
 }
