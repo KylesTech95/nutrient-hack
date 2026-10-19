@@ -40,6 +40,11 @@
     --color-offset-tile: #f00;
 }
 }
+
+html {
+    scroll-behavior: smooth;
+    overflow: scroll;
+}
 body {
     background-color: var(--bg-secondary);
 
@@ -48,6 +53,7 @@ body {
 }
 
 #wrapper {
+
     height:inherit;
     width:inherit;
 
@@ -555,8 +561,8 @@ select:hover {
     align-items: center;
     justify-content: center;
 
-    bottom:5px;
-    right:5px;
+    bottom:2px;
+    right:2px;
 }
 .btn-label {
     font-family: Arial, Helvetica, sans-serif;
@@ -579,6 +585,59 @@ select:hover {
     
     z-index: 999;
 }
+
+
+#meal-plan-container{
+    margin-top:.5rem;
+     
+    width:75%;
+
+    display:flex;
+    flex-direction: column;
+    
+    align-items: center;
+    justify-content: center;
+}
+
+#total-grams-container,
+#target-grams-container,
+#current-plate-container,
+#food-selection-container {
+    display:flex;
+    margin-bottom:8px;
+
+}
+
+#food-selection-filter {
+    width:100%;
+
+    padding:.25rem .5rem;
+
+    text-align: start;
+
+    margin-bottom:.25rem;
+    
+}
+#meal-plan-title,#plate-number {
+    color:var(--color-secondary)
+}
+.column-label {
+    text-align: center;
+
+    padding:.5rem 0;
+    min-width:200px;
+    max-width: 200px;
+    border:.5px solid var(--color-secondary);
+
+    color:var(--color-secondary)
+}
+
+
+
+
+
+
+
 /* special classes */
 
 /* no display */
@@ -629,4 +688,14 @@ select:hover {
 .lock-percentage {
     background-color: var(--bg-main) !important;
     color:var(--color-main) !important;
+}
+
+.bg-solid {
+    width: 100%;
+    text-align: center;
+
+    /* background-color: var(--bg-main); */
+    color:var(--color-secondary);
+
+    font-family: Arial, Helvetica, sans-serif;
 }

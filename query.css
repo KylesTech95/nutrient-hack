@@ -74,4 +74,19 @@
 .offset-option p {
     font-size: 9pt
 }
+
+#meal-plan-container{
+    width:75%;
+}
+
+#total-grams-container,#total-grams-container,#current-plate-container, #food-selection-container {
+    display:flex;
+
+}
+
+.column-label {
+    min-width:100px;
+    max-width: 100px;
+    border:.5px solid var(--color-secondary);
+}
 }

@@ -1,10 +1,10 @@
-import handleMacros from "./macros.js"
+import {handleMacros, hideMealPlanner} from "./macros.js"
 
 // find BMR
 let next = 1, prev = -1, current_index = 0;
 let global_direction = undefined;
 let global_tdee;
-let demographics = {
+export let demographics = {
     inputs:['height','weight','age','gender','complete'],
     element:document.querySelector('.demographics-input'),
     prev:document.getElementById('prev-arrow'),
@@ -45,7 +45,7 @@ const offsetTiles = [...document.querySelectorAll('.offset-option')];
 let offset_locked = true;
 
 // interactive buttons 
-const interactive = {
+export const interactive = {
     container:document.getElementById('interactive-scroll-container'),
     scroll:document.getElementById('scroll-btn')
 }
@@ -182,11 +182,15 @@ function updateBin(demographics){
 
 // find BMR - previous input
 function handlePrev(e){
+
     if(!initialMove && !goBack()){
         console.log('handlePrev: cancel');
         e.preventDefault();
         return;
     };
+
+    // hide meal planner
+    hideMealPlanner();
 
     // hide display scroll-button
     interactive.container.classList.add('no-display');
@@ -321,6 +325,9 @@ function unlockActivityLevel(locked) {
 
 function calculateBMRAndActivity(e,bmr) {
 
+    // hide meal planner
+    hideMealPlanner();
+
     // hide display scroll-button
     interactive.container.classList.add('no-display');
 
@@ -335,7 +342,6 @@ function calculateBMRAndActivity(e,bmr) {
     let original_bmr = Number(bmr.toString().slice());
     let result;
     let value = +select.value
-
     
     // tdee = BMR x Activity level
     result = Math.ceil(bmr *= value);
@@ -349,11 +355,24 @@ function calculateBMRAndActivity(e,bmr) {
     // update TDEE result
     demographics.result2.textContent && value > 0 ? demographics.result2.textContent = `TDEE = ${result} kcal` : demographics.result2.textContent = `Choose an option`;
 
-    // unlock offset
-    offset_locked = false;
-    unlockOffset()
+    if(select.value !== '') {
+        // unlock offset
+        offset_locked = false;
+        unlockOffset();
+    } else {
+        console.error('error: select a valid option');
+        restoreOffset();
+        lockOffset();
+    }
 }
-
+export function lockOffset(){
+    offset_locked = true;
+    // lock tiles
+    offsetTiles.map((tile,i) => {
+        // remove class
+        tile.classList.add('unclickable')
+    })
+}
 function unlockOffset() {
     if(offset_locked) {
         console.error('error: offset is locked');
@@ -368,7 +387,6 @@ function unlockOffset() {
         tile.onclick = e => handleOffsetClick(e,i);
     })
     
-
 }
 
 function handlePercentageOptions(percentages) {
@@ -381,6 +399,9 @@ function handlePercentageOptions(percentages) {
     return numbers;
 }
 function handleOffsetClick(e,index) {
+
+    // scroll to top of page
+    window.scrollTo(0,0);
 
     // initialMove is over - set to false
     initialMove = false;
@@ -458,7 +479,10 @@ function handleOffsetClick(e,index) {
 
                         if(demographics.offset && demographics.offset !== '') {
                         calculateTDEEWithOffset(demographics.offset);
-                        handleMacros(demographics.final_tdee, fitness_goal[index])
+                        handleMacros(demographics.final_tdee, fitness_goal[index]);
+
+                        // scroll to top of page
+                        window.scrollTo(0,0)
                     }
                 }
             })
@@ -565,7 +589,7 @@ let BMI_FORMULA = (height,weight,gender,age) => gender === 'M' ?
     undefined;
 
 // restore offset
-function restoreOffset(){
+export function restoreOffset(){
     offsetTiles.map((t,index )=> {
         // remove offset borders | target indication
         t.classList.remove('offset-clicked');
