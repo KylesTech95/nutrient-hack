@@ -54,7 +54,7 @@ export const interactive = {
     scroll:document.getElementById('scroll-btn')
 }
 
-interactive.scroll.onclick = handleScrollUp;
+interactive.scroll.onclick = handleScrollTarget;
 
 let initialMove = true;
 
@@ -167,7 +167,7 @@ function handleIteration(){
 }
 function handleWindowScroll(e) {
     // if offset selection is enabled
-    if(!offset_locked && document.querySelector('.div-tag')) {
+    if(!offset_locked && demographics.result3.textContent !== '') {
         // detect end of page
         if((window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight*.75)) {
             interactive.container.classList.remove('no-display');
@@ -404,8 +404,13 @@ function handlePercentageOptions(percentages) {
 }
 function handleOffsetClick(e,index) {
 
-    // scroll to top of page
-    window.scrollTo(0,0);
+    // hide scroll button
+    interactive.container.classList.add('no-display')
+    // reset tdee
+    demographics.result2.textContent = `TDEE = ${global_tdee} kcal`;
+    demographics.result3.textContent = ``;
+
+    hideMealPlanner()
 
     // initialMove is over - set to false
     initialMove = false;
@@ -450,12 +455,12 @@ function handleOffsetClick(e,index) {
             });
 
             // lock the average - DEFAULT
-            divTag.children[1].classList.add('lock-percentage');
+            // divTag.children[1].classList.add('lock-percentage');
+            
             // store in demographics[offset]
             let [per,type] = [divTag.children[1].textContent.slice(0,-1),tile.children[2].textContent];
             demographics.offset = `${per} ${type}`;
-            calculateTDEEWithOffset(demographics.offset);
-            handleMacros(demographics.final_tdee, fitness_goal[index]);
+            // calculateTDEEWithOffset(demographics.offset);
 
             // 6. update divtag class
             divTag.classList.add('div-tag')
@@ -465,7 +470,6 @@ function handleOffsetClick(e,index) {
 
             // 8. divTag p click
             let ops = [...divTag.children].map(o => {
-
                 o.onclick = e => {
                         let restore = [...divTag.children].map(h => h.classList.remove('lock-percentage'));
                         
@@ -511,10 +515,6 @@ function calculateTDEEWithOffset(offset) {
     demographics.result2.textContent = `TDEE = ${(demographics.final_tdee)} kcal (${tdee_chunk}kcal ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`;
     // update demographics.result3 (tdee display)
     demographics.result3.textContent = `Total consumption = ${(demographics.final_tdee)} kcal`;
-
-    // display scroll-button
-    interactive.container.classList.remove('no-display');
-
 }
 // handleGenderInput
 function handleGenderInput(e){
@@ -629,4 +629,18 @@ function handleScrollUp(e) {
 
     // scroll to top of page
     window.scrollTo(0,0)
+}
+
+function handleScrollTarget(e) {
+    const target = e.target || interactive.scroll;
+
+    if(!target) {
+        console.error('error: check target item');
+        return;
+    }
+
+    interactive.container.classList.add('no-display');
+
+    location.href = location.origin + "#total-calorie-result"
+
 }
