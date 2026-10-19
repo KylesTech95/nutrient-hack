@@ -1,4 +1,4 @@
-import {handleMacros, hideMealPlanner} from "./macros.js"
+8import {handleMacros, hideMealPlanner} from "./macros.js"
 import foodFacts from "./foodfacts.js";
 
 // test food facts
@@ -641,6 +641,6 @@ function handleScrollTarget(e) {
 
     interactive.container.classList.add('no-display');
 
-    location.href = location.origin + "#total-calorie-result"
+    location.href = location.href + "#total-calorie-result"
 
 }
