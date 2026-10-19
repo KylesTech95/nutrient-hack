@@ -1,4 +1,8 @@
 import {handleMacros, hideMealPlanner} from "./macros.js"
+import foodFacts from "./foodfacts.js";
+
+// test food facts
+foodFacts();
 
 // find BMR
 let next = 1, prev = -1, current_index = 0;
