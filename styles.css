@@ -600,13 +600,13 @@ select:hover {
     align-items: center;
     justify-content: center;
 }
-#search-results-container,
-#food-selection-result-container{
-    background-color: var(--bg-main);
-}
+
 #search-results-container li p,
 #food-selection-result-container li p {
     background-color: var(--bg-secondary);
+}
+#food-selection-result-container li input {
+    color: var(--color-main) !important;
 }
 #total-grams-container,
 #target-grams-container,
@@ -615,7 +615,6 @@ select:hover {
 #food-selection-result-container li,
 #search-results-container {
     display:flex;
-
 }
 
 #food-selection-filter {
@@ -645,6 +644,15 @@ select:hover {
     color:var(--color-secondary)
 }
 
+.column-quantity {
+    min-width:50px !important;
+    max-width: 50px !important;
+    
+    border:1.5px solid var(--bg-secondary);
+    
+    color:var(--color-main);
+}
+
 
 
 #search-results-container,#food-selection-result-container{
@@ -660,7 +668,13 @@ select:hover {
     gap:4px;
 }
 
-#search-results-container li {
+#food-selection-result-container li{
+    position:relative;
+}
+#search-results-container li,
+#food-selection-result-container li{
+    border:1.5px solid var(--bg-secondary);
+
     display:flex;
 }
 #search-results-container li:hover {
@@ -680,11 +694,16 @@ select:hover {
 
 /* special classes */
 
+.no-pointer-events {
+    pointer-events: none;
+}
 /* no display */
 .no-display {
     display:none !important;
 }
-
+.not-clicked {
+    border:1.5px solid var(--color-error) !important;
+}
 .container-border {
     border:2px solid var(--bg-main);
 }
@@ -738,4 +757,19 @@ select:hover {
     color:var(--color-secondary);
 
     font-family: Arial, Helvetica, sans-serif;
+}
+
+.exit-btn:hover {
+    cursor:pointer;
+
+    transform: scale(.93);
+}
+.exit-btn {
+    position:absolute;
+
+    left:-20px;
+    top:20px;
+
+    width:15px;
+    height:15px;
 }

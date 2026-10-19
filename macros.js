@@ -172,8 +172,8 @@ export function hideMealPlanner(){
 
 // search filter
 function searchFood(e) {
-
-    clearResults()
+    
+    clearResults();
 
     let f, matches;
     if(foods) {
@@ -194,7 +194,14 @@ function searchFood(e) {
         let li = createSearchResult(match);
         search.results.append(li);
 
-        li.onclick = selectFood;
+        // update quantity
+        let quantityVal = li.children[0];
+        quantityVal.value = Number(match.serving / 28.35).toFixed(1);
+
+        let quantity_element = li.children[0];
+        quantity_element.classList.remove('not-clicked');
+
+        li.onclick = selectFood
     })
 
     if(e.target.value === '') clearResults();
@@ -204,6 +211,7 @@ function searchFood(e) {
 function createSearchResult(item) {
 
     let li = document.createElement('li');
+    let quantity = document.createElement('input');
     let food = document.createElement('p');
     let proteins = document.createElement('p');
     let carbs = document.createElement('p');
@@ -214,16 +222,22 @@ function createSearchResult(item) {
     carbs.textContent = 'C - ' + item.carbs;
     fats.textContent = 'F - ' + item.fats;
 
-    food.classList.add('column-label');
-    proteins.classList.add('column-label');
-    carbs.classList.add('column-label');
-    fats.classList.add('column-label');
+    food.classList.add('column-label','no-pointer-events');
+    proteins.classList.add('column-label','no-pointer-events');
+    carbs.classList.add('column-label','no-pointer-events');
+    fats.classList.add('column-label','no-pointer-events');
     
     proteins.setAttribute('--data-set', 'proteins');
     carbs.setAttribute('--data-set', 'carbs');
     fats.setAttribute('--data-set', 'fats');
 
-    let arr = [food,proteins,carbs,fats]
+    // handle quanitiy input
+    quantity.type = 'number';
+    quantity.setAttribute('min','0')
+    quantity.setAttribute('placeholder','oz')
+    quantity.classList.add('column-label','column-quantity');
+    
+    let arr = [quantity,food,proteins,carbs,fats]
     li.append(...arr)
 
     return li;
@@ -241,6 +255,134 @@ export function clearResults(){
 }
 
 function selectFood(item) {
+
+// prevent tile click
     let cloned = (item.currentTarget).cloneNode(true);
-    search.select.append(cloned);
+    let all_lis = [...item.currentTarget.parentElement.children];
+
+    // remove "not-clicked" class from all, or any, quantity inputs
+    all_lis.map(li => {
+        let getQuantity = li.children[0];
+        getQuantity.classList.remove('not-clicked');
+    })
+
+    if(cloned.children[0].classList.contains('column-quantity')){
+        item.stopPropagation();
+    } 
+    if(item.target.tagName==='LI' && cloned.children[0].value) {
+        cloned.children[0].setAttribute('disabled',true);
+        cloned.children[0].setAttribute('type','text');
+        cloned.children[0].removeAttribute('min');
+        cloned.children[0].value = cloned.children[0].value + " oz"
+        cloned.children[0].classList.remove('column-quantity');
+        // append food
+        search.select.append(cloned);
+        
+        let exitBtn = document.createElement('img');
+        exitBtn.src = './media/delete.png'
+        exitBtn.classList.add('exit-btn');
+        cloned.append(exitBtn);
+        
+
+        handleCurrentPlate(cloned);
+
+        // remove list item
+        exitBtn.onclick = handleRemoval
+
+        // if some list items still have a quantity value
+        if(all_lis.filter(l => {
+            return l.children[0].value
+        }).length > 1) {
+            item.currentTarget.children[0].value = '';
+            
+        } else {
+            search.filter.value = ''
+            clearResults();
+        }
+        
+    } else {
+        console.error('error: selectFood - check value');
+        if(item.target.tagName === 'LI' && !cloned.children[0].value){
+            console.log(item.target)
+            item.target.children[0].classList.add('not-clicked')
+        }
+    }
+ 
+}
+
+// handle the current-plate macros onchange
+function handleCurrentPlate(item) {
+    // method
+    let children = [...item.children].slice(2,item.children.length);
+    addMacros(children)
+}
+
+function addMacros(children){
+    let macros = {
+        proteins:null,
+        carbs:null,
+        fats:null,
+    }
+    
+    for(let i = 0; i < children.length; i++) {
+        let attr = children[i].getAttribute('--data-set');
+        if(attr){
+            let picked = +children[i].textContent.split` - `[1] || +children[i].textContent;
+            macros[`${attr}`] = picked||0;
+
+            console.log(macros[`${attr}`])
+            // add to current & subtract from target plates
+            console.log(currentPlateContainer.children[i])
+            if(!/^\d+(\.\d+)?$/g.test(currentPlateContainer.children[i].textContent)){
+                totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent.split` - `[1]) - macros[`${attr}`]).toFixed(2)
+                currentPlateContainer.children[i].textContent = +macros[`${attr}`]
+
+                
+            } else {
+                console.log(+totalGramsContainer.children[i].textContent)
+                console.log(macros[`${attr}`])
+                console.log("index",i)
+                totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2);
+                currentPlateContainer.children[i].textContent = (Number(currentPlateContainer.children[i].textContent) + macros[`${attr}`]).toFixed(2);
+            }
+            
+        }
+    }
+
+    for(let prop in macros) {
+        console.log(prop)
+        console.log(macros[prop])
+    }
+}
+
+function subtractMacros(children){
+    let macros = {
+        proteins:null,
+        carbs:null,
+        fats:null,
+    }
+
+    for(let i = 0; i < children.length; i++) {
+        let attr = children[i].getAttribute('--data-set');
+        if(attr){
+            let picked = +children[i].textContent.split` - `[1] || +children[i].textContent;
+            macros[`${attr}`] = picked||0;
+
+            // subtract
+            totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent) + macros[`${attr}`]).toFixed(2);
+            currentPlateContainer.children[i].textContent = (Number(currentPlateContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2);
+            
+        }
+    }
+}
+
+function handleRemoval(e) {
+    let target = e.target;
+    let parent = target.parentElement;
+
+    let children = [...parent.children].slice(2,-1);
+
+    subtractMacros(children);
+
+    parent.remove();
 }

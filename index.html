@@ -59,7 +59,7 @@
 
          <!-- plate container     -->
         <!-- <div id="meal-plan-container" class="no-display"> -->
-        <div id="meal-plan-container" class="no-display">
+        <div id="meal-plan-container">
             <!-- title -->
             <h4 id="meal-plan-title">Meal Plan</h4>
 
@@ -67,17 +67,27 @@
 
             <!-- column -->
             <div class="bg-solid bolder-text">Daily Macros</div>
-            <div id="total-grams-container">
+            <!-- <div id="total-grams-container">
                 <p class="column-label" --data-set="proteins">Proteins (P)</p>
                 <p class="column-label" --data-set="carbs">Carbs (C)</p>
                 <p class="column-label" --data-set="fats">Fats (F)</p>
+            </div> -->
+            <div id="total-grams-container">
+                <p class="column-label" --data-set="proteins">P - 225</p>
+                <p class="column-label" --data-set="carbs">C - 187</p>
+                <p class="column-label" --data-set="fats">F - 90</p>
             </div>
             <!-- target plate -->
             <div class="bg-solid bolder-text">Target Plate Macros</div>
-            <div id="target-grams-container">
+            <!-- <div id="target-grams-container">
                 <p class="column-label" --data-set="proteins"></p>
                 <p class="column-label" --data-set="carbs"></p>
                 <p class="column-label" --data-set="fats"></p>
+            </div> -->
+            <div id="target-grams-container">
+                <p class="column-label" --data-set="proteins">56.25</p>
+                <p class="column-label" --data-set="carbs">46.75</p>
+                <p class="column-label" --data-set="fats">22.5</p>
             </div>
             <!-- current plate -->
             <div class="bg-solid bolder-text">Current Plate Macros</div>
@@ -89,6 +99,7 @@
             <!-- food selection -->
             <div class="bg-solid bolder-text">Food Selection</div>
             <div id="food-selection-container">
+                <p class="column-label">Quantity (oz)</p>
                 <p class="column-label">ITEM</p>
                 <p class="column-label">P</p>
                 <p class="column-label">C</p>
@@ -99,6 +110,7 @@
             </ul>
             <!-- food selection input -->
             <input type="text" id="food-selection-filter" class="food-filter" placeholder="search food...">
+            
             <ul id="search-results-container">
                     <!-- <li class="list-result">
                         <p class="column-label">Banana</p>
