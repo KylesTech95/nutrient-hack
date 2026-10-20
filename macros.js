@@ -294,6 +294,8 @@ function selectFood(item) {
         exitBtn.classList.add('exit-btn');
         cloned.append(exitBtn);
         
+        location.href = location.href + "#total-calorie-result"
+
 
         handleCurrentPlate(cloned);
 
