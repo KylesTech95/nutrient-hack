@@ -93,4 +93,20 @@
     max-width: 66px;
     border:.5px solid var(--color-secondary);
 }
+
+#total-grams-container p,
+#target-grams-container p,
+#current-plate-container p{
+    min-width: 100px !important;
+    max-width: 100px !important;
+}
+}
+
+
+.no-scrollbar {
+  /* Modern standard: Firefox 64+, Chrome 121+, Edge 121+, Safari 18.2+ */
+  scrollbar-width: none;
+  
+  /* Legacy Edge and IE */
+  -ms-overflow-style: none; 
 }

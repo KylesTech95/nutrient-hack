@@ -154,10 +154,10 @@ function handleMealPlanner(obj) {
         console.log("grams",o[getMacro]['grams'])
 
         // setup total textcontent 
-        example[i].textContent = getMacro[0].toUpperCase() + "- " + (o[getMacro]['grams']).toFixed(2);
+        example[i].textContent = getMacro[0].toUpperCase() + " - " + (o[getMacro]['grams']).toFixed(2);
 
         // setup current plate textcontent
-        target[i].textContent = getMacro[0].toUpperCase() + "- " + (o[getMacro]['per_meal']).toFixed(2);
+        target[i].textContent = getMacro[0].toUpperCase() + " - " + (o[getMacro]['per_meal']).toFixed(2);
     }
 
 
@@ -193,6 +193,9 @@ function searchFood(e) {
     matches.map(match => {
         let li = createSearchResult(match);
         search.results.append(li);
+        let replaced = [...search.results.children]; //.filter((a,b)=> b < 10)
+        // let replaced = [...search.results.children].filter((a,b)=> b < 10)
+        search.results.replaceChildren(...replaced)
 
         // update quantity
         let quantityVal = li.children[0];
@@ -202,6 +205,9 @@ function searchFood(e) {
         quantity_element.classList.remove('not-clicked');
 
         li.onclick = selectFood
+
+        // quantity input
+        quantityVal.oninput = handleQuantityInput;
     })
 
     if(e.target.value === '') clearResults();
@@ -230,6 +236,10 @@ function createSearchResult(item) {
     proteins.setAttribute('--data-set', 'proteins');
     carbs.setAttribute('--data-set', 'carbs');
     fats.setAttribute('--data-set', 'fats');
+
+    proteins.setAttribute('--data-grams', item.proteins);
+    carbs.setAttribute('--data-grams', item.carbs);
+    fats.setAttribute('--data-grams', item.fats);
 
     // handle quanitiy input
     quantity.type = 'number';
@@ -384,5 +394,27 @@ function handleRemoval(e) {
 
     subtractMacros(children);
 
-    parent.remove();
+    parent.remove(); 
 }
+
+function handleQuantityInput(e) {
+    console.log(e.target.value);
+    
+    let parent = e.target.parentElement;
+
+    let children = [...parent.children].slice(2,parent.children.length);
+    
+    children.map((child,index) => {
+        // convert to number
+        let num_str = +child.getAttribute('--data-grams')
+        console.log(num_str)
+        // multiply copy by quantity
+        let getNum = (parseFloat(num_str) * parseFloat(e.target.value)).toFixed(2);
+
+        console.log(getNum)
+
+        child.textContent = (getNum);
+    })
+}
+
+console.log(parseFloat('.0'))

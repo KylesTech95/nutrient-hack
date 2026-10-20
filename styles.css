@@ -608,6 +608,14 @@ select:hover {
 #food-selection-result-container li input {
     color: var(--color-main) !important;
 }
+#search-results-container {
+    max-height:30vh;
+    overflow-y:scroll;
+
+    border-left:1.5px solid var(--color-secondary);
+    border-right:1.5px solid var(--color-secondary);
+}
+
 #total-grams-container,
 #target-grams-container,
 #current-plate-container,
@@ -625,7 +633,7 @@ select:hover {
     text-align: start;
 
     margin:1.25rem;
-
+    
     border-radius: 20px;
 
     
@@ -657,6 +665,8 @@ select:hover {
 
 #search-results-container,#food-selection-result-container{
     /* border:2px solid red; */
+    font-family: Arial, Helvetica, sans-serif;
+
 
     width:100%;
 
