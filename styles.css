@@ -248,7 +248,9 @@ div.plate-section:last-child{
 
 
 }
-
+.plate-section:hover {
+    z-index: 999;
+}
 /* plate indicators */
 .plate-section div.plate-indicator {
     z-index:997;

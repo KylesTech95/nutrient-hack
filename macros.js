@@ -423,6 +423,7 @@ function subtractMacros(children){
             }
         }
     }
+    handleScrollTarget(interactive.scroll)
     
 }
 let restoreMacros = {

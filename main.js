@@ -651,6 +651,7 @@ export function handleScrollTarget(e) {
 
     interactive.container.classList.add('no-display');
 
+    window.onbeforeUnload = null;
     location.href = location.origin + "#total-calorie-result"
 
 }
