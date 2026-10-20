@@ -419,5 +419,75 @@ export const foods = [
     "proteins": 1.1,
     "fats": 0.1,
     "carbs": 9.3
-  }
+  },
+  {
+      "item": "Broccoli",
+      "serving": 100,
+      "proteins": 2.8,
+      "carbs": 7.0,
+      "fats": 0.4
+    },
+    {
+      "item": "Spinach",
+      "serving": 100,
+      "proteins": 2.9,
+      "carbs": 3.6,
+      "fats": 0.4
+    },
+    {
+      "item": "Kale",
+      "serving": 100,
+      "proteins": 2.9,
+      "carbs": 4.4,
+      "fats": 0.6
+    },
+    {
+      "item": "Asparagus",
+      "serving": 100,
+      "proteins": 2.2,
+      "carbs": 3.9,
+      "fats": 0.1
+    },
+    {
+      "item": "Brussels Sprouts",
+      "serving": 100,
+      "proteins": 3.4,
+      "carbs": 9.0,
+      "fats": 0.3
+    },
+    {
+      "item": "Green Peas",
+      "serving": 100,
+      "proteins": 5.4,
+      "carbs": 14.5,
+      "fats": 0.4
+    },
+    {
+      "item": "Zucchini",
+      "serving": 100,
+      "proteins": 1.2,
+      "carbs": 3.1,
+      "fats": 0.3
+    },
+    {
+      "item": "Green Bell Pepper",
+      "serving": 100,
+      "proteins": 0.9,
+      "carbs": 4.6,
+      "fats": 0.2
+    },
+    {
+      "item": "Cucumber (with peel)",
+      "serving": 100,
+      "proteins": 0.7,
+      "carbs": 3.6,
+      "fats": 0.1
+    },
+    {
+      "item": "Edamame (prepared)",
+      "serving": 100,
+      "proteins": 11.9,
+      "carbs": 8.9,
+      "fats": 5.2
+    }
 ]

@@ -357,7 +357,7 @@ function addMacros(children){
             console.log(currentPlateContainer.children[i].textContent)
             console.log(targetGramsContainer.children[i].textContent.split` - `[1])
 
-            let quotient = Math.round((Number(currentPlateContainer.children[i].textContent) / Number(targetGramsContainer.children[i].textContent.split` - `[1])) * 100);
+            let quotient = Math.round((Number(currentPlateContainer.children[i].textContent) / Number(targetGramsContainer.children[i].textContent.split` - `[1]||targetGramsContainer.children[i].textContent)) * 100);
 
             console.log(quotient);
 
@@ -400,7 +400,7 @@ function subtractMacros(children){
 
             console.log(targetPercentage);
 
-            let quotient = Math.round((Number(currentPlateContainer.children[i].textContent) / Number(targetGramsContainer.children[i].textContent.split` - `[1])) * 100);
+            let quotient = Math.round((Number(currentPlateContainer.children[i].textContent) / Number(targetGramsContainer.children[i].textContent.split` - `[1]||targetGramsContainer.children[i].textContent)) * 100);
 
             console.log(quotient);
 
