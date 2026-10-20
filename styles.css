@@ -189,7 +189,7 @@ margin:1.5rem 0;
     left:30%;
 
 }
-[data-carbohydrates] > p{
+[data-carbs] > p{
     bottom:25%;
     left:30%;
 }
@@ -289,7 +289,7 @@ div.plate-section:last-child{
 }
 
 /* carbs */
-[data-carbohydrates-indicator] {
+[data-carbs-indicator] {
     background-color:green;
     
     background-color:blueviolet;
@@ -600,6 +600,9 @@ select:hover {
     align-items: center;
     justify-content: center;
 }
+#search-results-container li {
+    /* border:2px solid red !important; */
+}
 
 #search-results-container li p,
 #food-selection-result-container li p {
@@ -653,7 +656,9 @@ select:hover {
 }
 
 .column-quantity {
-    min-width:50px !important;
+    text-align: center;
+
+    min-width:88px !important;
     max-width: 50px !important;
     
     border:1.5px solid var(--bg-secondary);
@@ -688,7 +693,7 @@ select:hover {
     display:flex;
 }
 #search-results-container li:hover {
-    transform: scale(.9);
+    transform: scale(.98);
     cursor: pointer;
 }
 #search-results-container li p{
@@ -783,3 +788,15 @@ select:hover {
     width:15px;
     height:15px;
 }
+
+/* p[--data-set="proteins"]{
+    color:rgb(102, 255, 72) !important
+} */
+p[--data-set="proteins"],
+p[--data-set="carbs"],
+p[--data-set="fats"]{
+    color:rgb(254, 159, 50) !important
+}
+/* p[--data-set="fats"]{
+    color:rgb(254, 50, 50) !important
+} */

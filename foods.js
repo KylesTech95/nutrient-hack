@@ -8,6 +8,13 @@ export const foods = [
     fats:.4,
 },
 {
+    serving:14,
+    item:'flaxseed oil',
+    proteins:0,
+    carbs:0,
+    fats:14,
+},
+{
     serving:85,
     item:'chicken breast',
     proteins:26,

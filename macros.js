@@ -20,6 +20,8 @@ let children = {
         select:[...foodSelectionContainer.children],
 }
 
+let in_range = 10;
+
 let portions = {
     fat_loss:{proteins:30,carbs:40,fats:30},
 
@@ -61,6 +63,7 @@ export function handleMacros(tdee,type) {
         
         // restore tdee-selection
         tdee_selection.value = "";
+        tdee_selection.removeAttribute('disabled')
 
         // restore offset
         setTimeout(()=>{
@@ -89,8 +92,6 @@ export function handleMacros(tdee,type) {
         number_of_meals = +howManyMeals;
     }
 
-    console.log(howManyMeals)
-    
     // method
     // target portion by fitness-goal (fat loss | lean mass | balanced)
     current_portion = {...portions[type]};
@@ -207,7 +208,7 @@ function searchFood(e) {
         li.onclick = selectFood
 
         // quantity input
-        quantityVal.oninput = handleQuantityInput;
+        quantityVal.oninput = (e) => handleQuantityInput(e,match.serving);
     })
 
     if(e.target.value === '') clearResults();
@@ -324,7 +325,8 @@ function selectFood(item) {
 function handleCurrentPlate(item) {
     // method
     let children = [...item.children].slice(2,item.children.length);
-    addMacros(children)
+    addMacros(children);
+    
 }
 
 function addMacros(children){
@@ -340,14 +342,10 @@ function addMacros(children){
             let picked = +children[i].textContent.split` - `[1] || +children[i].textContent;
             macros[`${attr}`] = picked||0;
 
-            console.log(macros[`${attr}`])
             // add to current & subtract from target plates
-            console.log(currentPlateContainer.children[i])
             if(!/^\d+(\.\d+)?$/g.test(currentPlateContainer.children[i].textContent)){
                 totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent.split` - `[1]) - macros[`${attr}`]).toFixed(2)
-                currentPlateContainer.children[i].textContent = +macros[`${attr}`]
-
-                
+                currentPlateContainer.children[i].textContent = +macros[`${attr}`];
             } else {
                 console.log(+totalGramsContainer.children[i].textContent)
                 console.log(macros[`${attr}`])
@@ -355,13 +353,29 @@ function addMacros(children){
                 totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2);
                 currentPlateContainer.children[i].textContent = (Number(currentPlateContainer.children[i].textContent) + macros[`${attr}`]).toFixed(2);
             }
-            
-        }
-    }
 
-    for(let prop in macros) {
-        console.log(prop)
-        console.log(macros[prop])
+            console.log(currentPlateContainer.children[i].textContent)
+            console.log(targetGramsContainer.children[i].textContent.split` - `[1])
+
+            let quotient = Math.round((Number(currentPlateContainer.children[i].textContent) / Number(targetGramsContainer.children[i].textContent.split` - `[1])) * 100);
+
+            console.log(quotient);
+
+            targetGramsContainer.children[i].style = `color: ${getColorByPercentage(quotient)} !important; transition:.25s;`
+            
+            // handle plate indicator
+            let getIndicator = document.querySelector(`.plate-indicator[data-${attr}-indicator]`);
+            console.log(getIndicator)
+
+            console.log((Number(quotient)/100) * getIndicator.parentElement.clientHeight)
+            getIndicator.style = `height:${(Number(quotient)/100) * getIndicator.parentElement.clientHeight}px !important`;
+
+            if(Math.abs(Number(currentPlateContainer.children[i].textContent) - Number(targetGramsContainer.children[i].textContent.split` - `[1])) <= in_range) {
+                currentPlateContainer.children[i].style = 'color:#1EA32A !important';
+            } else {
+                currentPlateContainer.children[i].style = 'color:#rgb(254, 159, 50) !important';
+            }
+        }
     }
 }
 
@@ -382,8 +396,31 @@ function subtractMacros(children){
             totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent) + macros[`${attr}`]).toFixed(2);
             currentPlateContainer.children[i].textContent = (Number(currentPlateContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2);
             
+            let targetPercentage = Math.round((Number(currentPlateContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2) / Number(targetGramsContainer.children[i].textContent.split` - `[1]));
+
+            console.log(targetPercentage);
+
+            let quotient = Math.round((Number(currentPlateContainer.children[i].textContent) / Number(targetGramsContainer.children[i].textContent.split` - `[1])) * 100);
+
+            console.log(quotient);
+
+            targetGramsContainer.children[i].style = `color: ${getColorByPercentage(quotient)} !important; transition:.25s;`;
+
+            // handle plate indicator
+            let getIndicator = document.querySelector(`.plate-indicator[data-${attr}-indicator]`);
+            console.log(getIndicator)
+
+            console.log((Number(quotient)/100) * getIndicator.parentElement.clientHeight);
+            getIndicator.style = `height:${(Number(quotient)/100) * getIndicator.parentElement.clientHeight}px !important`;
+
+            if(Math.abs(Number(currentPlateContainer.children[i].textContent) - Number(targetGramsContainer.children[i].textContent.split` - `[1])) <= in_range) {
+                currentPlateContainer.children[i].style = 'color:#1EA32A !important';
+            } else {
+                currentPlateContainer.children[i].style = 'color:#rgb(254, 159, 50) !important';
+            }
         }
     }
+    
 }
 
 function handleRemoval(e) {
@@ -397,9 +434,7 @@ function handleRemoval(e) {
     parent.remove(); 
 }
 
-function handleQuantityInput(e) {
-    console.log(e.target.value);
-    
+function handleQuantityInput(e,serving) {
     let parent = e.target.parentElement;
 
     let children = [...parent.children].slice(2,parent.children.length);
@@ -407,14 +442,27 @@ function handleQuantityInput(e) {
     children.map((child,index) => {
         // convert to number
         let num_str = +child.getAttribute('--data-grams')
-        console.log(num_str)
+
         // multiply copy by quantity
-        let getNum = (parseFloat(num_str) * parseFloat(e.target.value)).toFixed(2);
+        let getNum = (parseFloat(num_str) * parseFloat(e.target.value) / parseFloat(serving/28.35)).toFixed(1);
 
-        console.log(getNum)
-
-        child.textContent = (getNum);
+        child.textContent = (child.getAttribute('--data-set')[0].toUpperCase() + " - " + (getNum))||0;
     })
 }
 
-console.log(parseFloat('.0'))
+function getColorByPercentage(percentage) {
+  // Handle overflow first
+  if (percentage > 115) return '#EB2F2F'; // Red
+  if (percentage < 0) return '#rgb(254, 159, 50)';   // Default to yellow for negative numbers
+  
+  if (percentage <= 25) {
+    return '#rgb(254, 159, 50)'; // Yellow
+  } else if (percentage <= 50) {
+    return '#B5E325'; // Yellow-Green
+  } else if (percentage <= 75) {
+    return '#61D836'; // Light Green
+  } else if (percentage <= 115) {
+    return '#1EA32A'; // Dark Green
+  }
+}
+

@@ -48,7 +48,13 @@
 #search-results-container li p{
     font-size:11pt;
 }
+#search-results-container li{
+}
+#search-results-container {
+    padding: 0 .5rem ;
 
+    min-width:100vw;
+}
 .plate-section > p{
     font-size:12pt; 
 }
@@ -87,10 +93,14 @@
     display:flex;
 
 }
+#food-selection-container p {
+    min-width:80px;
+    max-width: 80px;
+}
 
 .column-label {
-    min-width:66px;
-    max-width: 66px;
+    min-width:100px;
+    max-width: 100px;
     border:.5px solid var(--color-secondary);
 }
 
