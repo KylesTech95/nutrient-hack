@@ -259,6 +259,7 @@ div.plate-section:last-child{
 
     transition:smooth !important;
 
+    opacity: .7;
 }
 
 /* keyframe animation  */
@@ -615,6 +616,8 @@ select:hover {
     max-height:30vh;
     overflow-y:scroll;
 
+    min-width:100vw;
+
     border-left:1.5px solid var(--color-secondary);
     border-right:1.5px solid var(--color-secondary);
 }
@@ -627,7 +630,10 @@ select:hover {
 #search-results-container {
     display:flex;
 }
-
+#food-selection-container p {
+    min-width:175px;
+    max-width:175px;
+}
 #food-selection-filter {
     width:100%;
 

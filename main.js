@@ -1,4 +1,4 @@
-import {handleMacros, hideMealPlanner, clearResults, mealPlanContainer, clearfoodItems, search} from "./macros.js"
+import {handleMacros, hideMealPlanner, clearResults, clearPlate, mealPlanContainer, clearfoodItems, search} from "./macros.js"
 import foodFacts from "./foodfacts.js";
 
 // test food facts
@@ -89,6 +89,8 @@ function goBack(){
         console.log('user did no confirm. cancel out');
         return false;
     } else {
+        // clear plate
+        clearPlate(true)
         return true;
     }
 }
@@ -192,6 +194,7 @@ function handlePrev(e){
         e.preventDefault();
         return;
     };
+
 
     // hide meal planner
     hideMealPlanner();
@@ -500,6 +503,9 @@ function handleOffsetClick(e,index) {
 
                         // scroll to top of page
                         window.scrollTo(0,0)
+
+                        // clear plate
+                        clearPlate(false);
                     }
                 }
             })
@@ -521,7 +527,7 @@ function calculateTDEEWithOffset(offset) {
     demographics.final_tdee = g_l === 'LOSS' ?  tdee -= tdee_chunk : tdee += tdee_chunk ;
 
     // update demographics.result2 (tdee display)
-    demographics.result2.textContent = `TDEE = ${(demographics.final_tdee)} kcal (${tdee_chunk}kcal ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`;
+    demographics.result2.textContent = `TDEE = ${(demographics.final_tdee)} kcal (${tdee_chunk} kcal ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`;
     // update demographics.result3 (tdee display)
     demographics.result3.textContent = `Total consumption = ${(demographics.final_tdee)} kcal`;
 }
@@ -640,16 +646,11 @@ function handleScrollUp(e) {
     window.scrollTo(0,0)
 }
 
-function handleScrollTarget(e) {
+export function handleScrollTarget(e) {
     const target = e.target || interactive.scroll;
-
-    if(!target) {
-        console.error('error: check target item');
-        return;
-    }
 
     interactive.container.classList.add('no-display');
 
-    location.href = location.href + "#total-calorie-result"
+    location.href = location.origin + "#total-calorie-result"
 
 }

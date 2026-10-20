@@ -146,3 +146,16 @@ z-index: 999;
   /* Legacy Edge and IE */
   -ms-overflow-style: none; 
 }
+
+
+/* landscape */
+@media screen and (max-height: 480px) and (orientation: landscape) {
+    #plate-container {
+    height:250px;
+    width:250px;
+  }
+
+  #warpper{
+    padding: 0 1rem;
+  }
+}

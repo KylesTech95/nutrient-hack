@@ -1,4 +1,4 @@
-import { restoreOffset, lockOffset, demographics, interactive } from "./main.js";
+import { restoreOffset, lockOffset, demographics, interactive, handleScrollTarget } from "./main.js";
 import { foods } from "./foods.js";
 
 const tdee_selection = document.getElementById('tdee-selection');
@@ -213,6 +213,8 @@ function searchFood(e) {
 
     if(e.target.value === '') clearResults();
 
+    e.target.value = e.target.value.trimStart();
+
 }
 
 function createSearchResult(item) {
@@ -294,13 +296,12 @@ function selectFood(item) {
         exitBtn.classList.add('exit-btn');
         cloned.append(exitBtn);
         
-        location.href = location.href + "#total-calorie-result"
-
-
         handleCurrentPlate(cloned);
 
         // remove list item
         exitBtn.onclick = handleRemoval
+
+        handleScrollTarget(interactive.scroll)
 
         // if some list items still have a quantity value
         if(all_lis.filter(l => {
@@ -352,7 +353,7 @@ function addMacros(children){
                 console.log(+totalGramsContainer.children[i].textContent)
                 console.log(macros[`${attr}`])
                 console.log("index",i)
-                totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2);
+                totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent||Number(totalGramsContainer.children[i].textContent.split` - `[1])) - macros[`${attr}`]).toFixed(2);
                 currentPlateContainer.children[i].textContent = (Number(currentPlateContainer.children[i].textContent) + macros[`${attr}`]).toFixed(2);
             }
 
@@ -424,7 +425,31 @@ function subtractMacros(children){
     }
     
 }
+let restoreMacros = {
+    0:'P - 250',
+    1:'C - 193',
+    2:'F - 86',
+}
+export function clearPlate(cleared) {
+    current_portion = {};
 
+    const indicators = [...document.querySelectorAll('.plate-indicator')];
+
+    // lower indicator height
+    indicators.map(ind => ind.style = `height:0`);
+
+    let total_grams_children = [...totalGramsContainer.children];
+        total_grams_children.map((child,idx) => {
+            if(cleared){
+                child.textContent = restoreMacros[idx]
+            }
+            currentPlateContainer.children[idx].textContent = restoreMacros[idx];
+        })
+
+        // clear results
+        let chosen_items = [...search.select.children];
+        chosen_items.map(ch => ch.remove());
+}
 function handleRemoval(e) {
     let target = e.target;
     let parent = target.parentElement;
