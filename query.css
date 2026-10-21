@@ -53,6 +53,10 @@
 
     width:100vw;
 }
+
+#save-meal-button{
+    width:100%;
+}
 .exit-btn{
     left:-28px;
 

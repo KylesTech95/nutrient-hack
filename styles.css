@@ -20,6 +20,8 @@
     --color-notification: rgb(255, 0, 0);
     --color-error: #f00;
     --color-offset-tile: #000;
+    --border-save-btn:#000;
+
 
 }
 @media (prefers-color-scheme: dark) {
@@ -32,12 +34,14 @@
     --bg-input-bmr: #fff;
     --bg-interactive:#000;
 
+
     /* colors */
     --color-main:#000;
     --color-secondary: #fff;
     --color-error: #f00;
     --color-notification: #0f0;
     --color-offset-tile: #f00;
+    --border-save-btn:none;
 }
 }
 
@@ -576,13 +580,15 @@ select:hover {
     font-family: Arial, Helvetica, sans-serif;
 
     border-radius: 18px;
-    border:none;
+    border:1px solid var(--border-save-btn);
 
     font-size: 16pt;
 
-    margin-top:.5rem;
+    margin-top:1rem;
 
-    background-color: var(--color-notification);
+    background-color: #0f0;
+
+
 }
 
 /* interactive btn */
@@ -672,7 +678,7 @@ select:hover {
 
     text-align: start;
 
-    margin:1.25rem;
+    margin:1rem 0;
     
     border-radius: 20px;
 

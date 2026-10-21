@@ -682,6 +682,6 @@ export function handleScrollTarget(e) {
 
     // window.onbeforeunload = null;
     // location.href = location.origin + "#total-calorie-result"
-    window.scrollTo(0,document.getElementById('total-calorie-result').getBoundingClientRect().y + 150)
+    window.scrollTo(0,document.getElementById('total-calorie-result').getBoundingClientRect().y + 300)
 
 }
