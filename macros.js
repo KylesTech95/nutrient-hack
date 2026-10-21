@@ -2,11 +2,13 @@ import { restoreOffset, lockOffset, demographics, interactive, handleScrollTarge
 import { foods } from "./foods.js";
 
 const tdee_selection = document.getElementById('tdee-selection');
+const plateContainer = document.getElementById('plate-container')
 export const mealPlanContainer = document.getElementById('meal-plan-container');
 const totalGramsContainer = document.getElementById('total-grams-container');
 const foodSelectionContainer = document.getElementById('food-selection-container');
 const currentPlateContainer = document.getElementById('current-plate-container');
 const targetGramsContainer = document.getElementById('target-grams-container');
+const saveMealButton = document.getElementById('save-meal-button')
 export const search = {
     filter: document.getElementById('food-selection-filter'),
     select:document.getElementById('food-selection-result-container'),
@@ -47,6 +49,10 @@ let number_of_meals = null;
 
 // search results
 search.filter.oninput = searchFood;
+
+// save a meal
+saveMealButton.onclick = saveMeal;
+
 
 
 export function handleMacros(tdee,type) {
@@ -341,6 +347,7 @@ function addMacros(children){
     
     for(let i = 0; i < children.length; i++) {
         let attr = children[i].getAttribute('--data-set');
+            
         if(attr){
             let picked = +children[i].textContent.split` - `[1] || +children[i].textContent;
             macros[`${attr}`] = picked||0;
@@ -350,27 +357,21 @@ function addMacros(children){
                 totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent.split` - `[1]) - macros[`${attr}`]).toFixed(2)
                 currentPlateContainer.children[i].textContent = +macros[`${attr}`];
             } else {
-                console.log(+totalGramsContainer.children[i].textContent)
-                console.log(macros[`${attr}`])
-                console.log("index",i)
                 totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent||Number(totalGramsContainer.children[i].textContent.split` - `[1])) - macros[`${attr}`]).toFixed(2);
                 currentPlateContainer.children[i].textContent = (Number(currentPlateContainer.children[i].textContent) + macros[`${attr}`]).toFixed(2);
             }
 
-            console.log(currentPlateContainer.children[i].textContent)
-            console.log(targetGramsContainer.children[i].textContent.split` - `[1])
 
             let quotient = Math.round((Number(currentPlateContainer.children[i].textContent) / Number(targetGramsContainer.children[i].textContent.split` - `[1]||targetGramsContainer.children[i].textContent)) * 100);
 
-            console.log(quotient);
+            // console.log(quotient);
 
             targetGramsContainer.children[i].style = `color: ${getColorByPercentage(quotient)} !important; transition:.25s;`
             
             // handle plate indicator
             let getIndicator = document.querySelector(`.plate-indicator[data-${attr}-indicator]`);
-            console.log(getIndicator)
+            // console.log(getIndicator)
 
-            console.log((Number(quotient)/100) * getIndicator.parentElement.clientHeight)
             getIndicator.style = `height:${(Number(quotient)/100) * getIndicator.parentElement.clientHeight}px !important`;
 
             if(Math.abs(Number(currentPlateContainer.children[i].textContent) - Number(targetGramsContainer.children[i].textContent.split` - `[1])) <= in_range) {
@@ -380,6 +381,9 @@ function addMacros(children){
             }
         }
     }
+
+    determineBalancedMeal(children)    
+    
 }
 
 function subtractMacros(children){
@@ -399,7 +403,7 @@ function subtractMacros(children){
             totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent) + macros[`${attr}`]).toFixed(2);
             currentPlateContainer.children[i].textContent = (Number(currentPlateContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2);
             
-            let targetPercentage = Math.round((Number(currentPlateContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2) / Number(targetGramsContainer.children[i].textContent.split` - `[1]));
+            let targetPercentage = Math.round((Number(currentPlateContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2) / Number(targetGramsContainer.children[i].textContent.split` - `[1]||targetGramsContainer.children[i].textContent));
 
             console.log(targetPercentage);
 
@@ -423,13 +427,15 @@ function subtractMacros(children){
             }
         }
     }
-    handleScrollTarget(interactive.scroll)
+
+    determineBalancedMeal(children)   
     
+    handleScrollTarget(interactive.scroll)
 }
 let restoreMacros = {
-    0:'P - 250',
-    1:'C - 193',
-    2:'F - 86',
+    0:'P',
+    1:'C',
+    2:'F',
 }
 export function clearPlate(cleared) {
     current_portion = {};
@@ -442,7 +448,7 @@ export function clearPlate(cleared) {
     let total_grams_children = [...totalGramsContainer.children];
         total_grams_children.map((child,idx) => {
             if(cleared){
-                child.textContent = restoreMacros[idx]
+                currentPlateContainer.children[i].textContent = restoreMos[idx]
             }
             currentPlateContainer.children[idx].textContent = restoreMacros[idx];
         })
@@ -462,6 +468,36 @@ function handleRemoval(e) {
     parent.remove(); 
 }
 
+function determineBalancedMeal(children){
+let n_children = [...children].slice(0,-1);
+
+    let acc = 0;
+
+    for(let j = 0; j < n_children.length; j++){
+        console.log(n_children[j]);
+
+        let curr = Number(currentPlateContainer.children[j].textContent||currentPlateContainer.children[j].textContent.split` - `[1]);
+        let tar = Number(targetGramsContainer.children[j].textContent.split` - `[1] || targetGramsContainer.children[j].textContent);
+
+        console.log(curr)
+        console.log(tar)
+
+        let balanced = ((curr) / (tar)) * 100;
+        if(balanced > 89 && balanced < 116){
+            acc++
+        }
+    }
+
+    console.log(acc)
+
+    if(acc === 3) {
+        readyToSave();
+    } else {
+        notReadyToSave();
+    }
+
+    acc = 0;
+}
 function handleQuantityInput(e,serving) {
     let parent = e.target.parentElement;
 
@@ -494,3 +530,41 @@ function getColorByPercentage(percentage) {
   }
 }
 
+
+function readyToSave() {
+    console.log('save now')
+    console.log(saveMealButton)
+    saveMealButton.classList.remove('no-display');
+}
+
+function notReadyToSave(){
+    saveMealButton.classList.add('no-display');
+}
+
+function saveMeal(e) {
+    let btn = e.currentTarget || saveMealButton;
+    
+    let plate, daily, target, current, foods
+
+
+    plate = plateContainer.cloneNode(true);
+    daily = totalGramsContainer.cloneNode(true);
+    target = targetGramsContainer.cloneNode(true);
+    current = currentPlateContainer.cloneNode(true);
+    foods = search.select.cloneNode(true);
+
+
+    console.log(plate)    
+    console.log(daily)    
+    console.log(target)    
+    console.log(current)    
+    console.log(foods)
+
+
+    // hide button
+    notReadyToSave();
+}
+
+function removeMeal() {
+
+}

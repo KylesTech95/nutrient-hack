@@ -139,11 +139,19 @@ function handleIteration(){
         demographics.element.setAttribute('type', 'text');
 
         // oninput function
+        demographics.element.oninput = null;
         demographics.element.oninput = handleGenderInput;
 
         demographics.element.setAttribute('placeholder', 'M or F')
 
-    } else {    
+        // age
+    } else if (current_index > 1 && current_index < 3) {
+        demographics.element.oninput = null;
+        demographics.element.oninput = handleAgeInput;
+
+    }
+    
+    else {    
         demographics.genderLocked = false;
         demographics.element.setAttribute('type', 'number');
     }
@@ -530,6 +538,27 @@ function calculateTDEEWithOffset(offset) {
     demographics.result2.textContent = `TDEE = ${(demographics.final_tdee)} kcal (${tdee_chunk} kcal ${g_l[0].toUpperCase() + g_l.slice(1).toLowerCase()})`;
     // update demographics.result3 (tdee display)
     demographics.result3.textContent = `Total consumption = ${(demographics.final_tdee)} kcal`;
+}
+
+// age input
+function handleAgeInput(e){
+
+    if(demographics['inputs'][current_index] === 'age'){
+        let value = (e.target.value);
+        console.log(value)
+    
+        const isValid = /^\d{0,2}$/g.test(value);
+        if(!isValid){
+            console.log('is not valid')
+            e.target.value = ''
+        } else {
+            console.log('is valid')
+            e.target.value = value.toUpperCase();
+        }
+    } else {
+        e.preventDefault();
+    }
+    
 }
 // handleGenderInput
 function handleGenderInput(e){

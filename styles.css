@@ -556,6 +556,35 @@ select:hover {
     color:var(--color-main) !important;
 }
 
+#save-meal-button:hover{
+    cursor:pointer;
+    transform: scale(.98);
+}
+#save-meal-button {
+    width:66%;
+    height:50px;
+
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    text-align:center;
+    
+    padding:.35rem;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    border-radius: 18px;
+    border:none;
+
+    font-size: 16pt;
+
+    margin-top:.5rem;
+
+    background-color: var(--color-notification);
+}
+
 /* interactive btn */
 
 .btn-container {
