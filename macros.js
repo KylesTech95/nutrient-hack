@@ -351,12 +351,7 @@ function addMacros(children){
         if(attr){
             let picked = +children[i].textContent.split` - `[1] || +children[i].textContent;
 
-            console.log(macros[`${attr}`])
-
             macros[`${attr}`] = picked||0;
-
-            console.log(macros[`${attr}`])
-
 
             // add to current & subtract from target plates
             if(!/^\d+(\.\d+)?$/g.test(currentPlateContainer.children[i].textContent)){
@@ -380,7 +375,7 @@ function addMacros(children){
 
             getIndicator.style = `height:${(Number(quotient)/100) * getIndicator.parentElement.clientHeight}px !important`;
 
-            if(Math.abs(Number(currentPlateContainer.children[i].textContent||0) - Number(targetGramsContainer.children[i].textContent||targetGramsContainer.children[i].textContent.split` - `[1])) <= in_range) {
+            if(Math.abs(Number(currentPlateContainer.children[i].textContent||0) - Number(targetGramsContainer.children[i].textContent.split` - `[1])) <= in_range) {
                 currentPlateContainer.children[i].style = 'color:#1EA32A !important';
             } else {
                 currentPlateContainer.children[i].style = 'color:#rgb(254, 159, 50) !important';
