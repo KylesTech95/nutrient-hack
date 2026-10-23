@@ -54,7 +54,10 @@
     width:100vw;
 }
 
-#save-meal-button{
+#save-meal-button,
+#prev-meal-button,
+#next-meal-button,
+#edit-meal-button{
     width:100%;
 }
 .exit-btn{

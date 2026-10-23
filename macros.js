@@ -8,7 +8,11 @@ const totalGramsContainer = document.getElementById('total-grams-container');
 const foodSelectionContainer = document.getElementById('food-selection-container');
 const currentPlateContainer = document.getElementById('current-plate-container');
 const targetGramsContainer = document.getElementById('target-grams-container');
-const saveMealButton = document.getElementById('save-meal-button')
+const saveMealButton = document.getElementById('save-meal-button');
+const prevMealButton = document.getElementById('prev-meal-button');
+const nextMealButton = document.getElementById('next-meal-button');
+const editMealButton = document.getElementById('edit-meal-button');
+
 export const search = {
     filter: document.getElementById('food-selection-filter'),
     select:document.getElementById('food-selection-result-container'),
@@ -22,6 +26,12 @@ let children = {
         select:[...foodSelectionContainer.children],
 }
 
+// empty meals array holding meal objects (saved meals)
+let meals = [];
+// handle meal index
+let current_meal_plan = 1;
+
+// +-10 margin for hitting target macros
 let in_range = 10;
 
 let portions = {
@@ -53,6 +63,14 @@ search.filter.oninput = searchFood;
 // save a meal
 saveMealButton.onclick = saveMeal;
 
+// previous meal
+prevMealButton.onclick = previousMeal;
+
+// next meal
+nextMealButton.onclick = nextMeal;
+
+// edit meal
+prevMealButton.onclick = previousMeal;
 
 
 export function handleMacros(tdee,type) {
@@ -96,6 +114,8 @@ export function handleMacros(tdee,type) {
     } else {
         // if # of meals is valid
         number_of_meals = +howManyMeals;
+
+        demographics.meal_plan_title.textContent = `Meal Plan ${current_meal_plan}/${number_of_meals}`
     }
 
     // method
@@ -269,7 +289,6 @@ export function clearfoodItems(arr) {
 }
 
 export function clearResults(){
-    
     return [...search.results.children].map(c => c.remove());
 }
 
@@ -353,14 +372,24 @@ function addMacros(children){
 
             macros[`${attr}`] = picked||0;
 
+
+
             // add to current & subtract from target plates
             if(!/^\d+(\.\d+)?$/g.test(currentPlateContainer.children[i].textContent)){
-                totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent.split` - `[1]) - macros[`${attr}`]).toFixed(2)
+                console.log(Number(totalGramsContainer.children[i].textContent||totalGramsContainer.children[i].textContent.split` - `[1]))
+                console.log(macros[`${attr}`])
+
+                totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent.split` - `[1] || totalGramsContainer.children[i].textContent) - macros[`${attr}`]).toFixed(2)
                 currentPlateContainer.children[i].textContent = +macros[`${attr}`];
             } else {
-                totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent||Number(totalGramsContainer.children[i].textContent.split` - `[1])) - macros[`${attr}`]).toFixed(2);
+                console.log(Number(totalGramsContainer.children[i].textContent||totalGramsContainer.children[i].textContent.split` - `[1]))
+                console.log(macros[`${attr}`])
+
+                totalGramsContainer.children[i].textContent = (Number(totalGramsContainer.children[i].textContent||totalGramsContainer.children[i].textContent.split` - `[1]) - Number(macros[`${attr}`])).toFixed(2);
                 currentPlateContainer.children[i].textContent = (Number(currentPlateContainer.children[i].textContent) + macros[`${attr}`]).toFixed(2);
             }
+
+            
 
 
             let quotient = Math.round((Number(currentPlateContainer.children[i].textContent) / Number(targetGramsContainer.children[i].textContent.split` - `[1]||targetGramsContainer.children[i].textContent)) * 100);
@@ -431,7 +460,7 @@ function subtractMacros(children){
 
     determineBalancedMeal(children)   
     
-    handleScrollTarget(interactive.scroll)
+    // handleScrollTarget(interactive.scroll)
 }
 let restoreMacros = {
     0:'P',
@@ -449,7 +478,7 @@ export function clearPlate(cleared) {
     let total_grams_children = [...totalGramsContainer.children];
         total_grams_children.map((child,idx) => {
             if(cleared){
-                currentPlateContainer.children[i].textContent = restoreMos[idx]
+                currentPlateContainer.children[idx].textContent = restoreMacros[idx]
             }
             currentPlateContainer.children[idx].textContent = restoreMacros[idx];
         })
@@ -472,14 +501,14 @@ function handleRemoval(e) {
 function determineBalancedMeal(children){
 let n_children = [...children].slice(0,-1);
 
-    let acc = 0;
+    let acc = 0, difference;
 
     for(let j = 0; j < n_children.length; j++){
         console.log(n_children[j]);
 
         let curr = Number(currentPlateContainer.children[j].textContent||currentPlateContainer.children[j].textContent.split` - `[1]);
         let tar = Number(targetGramsContainer.children[j].textContent.split` - `[1] || targetGramsContainer.children[j].textContent);
-
+        
         console.log(curr)
         console.log(tar)
 
@@ -489,9 +518,21 @@ let n_children = [...children].slice(0,-1);
         }
     }
 
-    console.log(acc)
+    for(let k = 0; k < n_children.length; k++) {
+        if(acc === 3) {
+            difference = (Number(targetGramsContainer.children[k].textContent.split` - `[1]||targetGramsContainer.children[k].textContent) - Number(currentPlateContainer.children[k].textContent||currentPlateContainer.children[k].textContent.split` - `[1])).toFixed(1);
+
+           console.log("difference",difference);
+           console.log(Number(totalGramsContainer.children[k].textContent.split` - `[1] || totalGramsContainer.children[k].textContent))
+           
+           totalGramsContainer.children[k].textContent = (Number(totalGramsContainer.children[k].textContent.split` - `[1] || totalGramsContainer.children[k].textContent) + Number(difference)).toFixed(1);
+           } else {
+            console.log('save button is not here')
+           }
+    }
 
     if(acc === 3) {
+        
         readyToSave();
     } else {
         notReadyToSave();
@@ -542,12 +583,47 @@ function notReadyToSave(){
     saveMealButton.classList.add('no-display');
 }
 
+function enablePrevious(){
+    prevMealButton.classList.remove('no-display');
+}
+
+function disablePrevious(){
+    prevMealButton.classList.add('no-display');
+}
+
+function enableNext(){
+    nextMealButton.classList.remove('no-display');
+}
+
+function disableNext(){
+    nextMealButton.classList.add('no-display');
+}
+
+function enableEdit(){
+    editMealButton.classList.remove('no-display');
+}
+
+function disableEdit(){
+    editMealButton.classList.add('no-display');
+}
+
+function nextMeal(e){
+    increaseMealIndex(current_meal_plan);
+}
+function previousMeal(e) {
+    decreaseMealIndex(current_meal_plan);
+}
 function saveMeal(e) {
     let btn = e.currentTarget || saveMealButton;
     
-    let plate, daily, target, current, foods
+    if(!btn){
+        console.error('Error: Check save button');
+        return;
+    }
+    let fitness_goal, meal_title, plate, daily, target, current, foods
 
-
+    fitness_goal = demographics.fitness_goal.cloneNode(true);
+    meal_title = demographics.meal_plan_title.cloneNode(true);
     plate = plateContainer.cloneNode(true);
     daily = totalGramsContainer.cloneNode(true);
     target = targetGramsContainer.cloneNode(true);
@@ -555,17 +631,117 @@ function saveMeal(e) {
     foods = search.select.cloneNode(true);
 
 
+    console.log(number_of_meals)
+    console.log(meal_title)    
+    console.log(fitness_goal)    
     console.log(plate)    
     console.log(daily)    
     console.log(target)    
     console.log(current)    
     console.log(foods)
 
+    let save_object = {...number_of_meals,meal_title,fitness_goal,plate,daily,target,current,foods}
+
+    meals.push(save_object);
 
     // hide button
     notReadyToSave();
+
+    console.log(meals);
+
+    clearPlate(true)
+    clearResults();
+    search.filter.value = ''
+
+    increaseMealIndex(current_meal_plan)
 }
 
 function removeMeal() {
 
+}
+
+function increaseMealIndex(idx) {
+
+   
+    let index = (idx - 1);
+
+    if(!number_of_meals||number_of_meals===null) {
+        console.error('Error: Number of meals not declared.');
+        return;
+    }
+
+    if(index < (number_of_meals - 1)) {
+
+        idx++;
+        console.log(idx)
+
+        if(idx > 1) {
+            enablePrevious();
+        }
+
+        // check if meal exists
+        if(meals[idx - 1]){
+            search.filter.setAttribute('disabled',true);
+            
+            if(index === meals.length - 1){
+                disableNext();
+            } else {
+                enableNext();
+                enableEdit();
+            }
+        } else {
+            search.filter.removeAttribute('disabled');
+
+            disableNext();
+            disableEdit();
+        }
+
+        demographics.meal_plan_title.textContent = `Meal Plan ${idx}/${number_of_meals}`;
+        current_meal_plan = idx;
+    } else {
+        search.filter.setAttribute('disabled',true)
+        console.error('Error: You have reached the last meal.')
+    }
+}
+
+function decreaseMealIndex(idx) {
+    let index = (idx - 1);
+    if(!number_of_meals||number_of_meals===null) {
+        console.error('Error: Number of meals not declared.');
+        return;
+    }
+    console.log(index)
+    if(index >= 0) {
+
+        idx--;
+        console.log(idx)
+
+        if(idx < 2) {
+            disablePrevious();
+        }
+
+        // check if meal exists
+        if(meals[idx - 1]){
+            search.filter.setAttribute('disabled',true);
+            console.log('the meal exists at index ' + idx-1)
+            enableNext();
+            enableEdit();
+            
+        } else {
+            disableNext();
+            disableEdit();
+        }
+
+        demographics.meal_plan_title.textContent = `Meal Plan ${idx}/${number_of_meals}`;
+        current_meal_plan = idx;
+
+    }
+}
+
+function restorePlan(index) {
+    if(index && meals[index-1]) {
+        console.log(meals[index - 1])
+    } else {
+        console.error('Error: check meals[] or index.')
+    }
 }

@@ -8,6 +8,8 @@ foodFacts();
 let next = 1, prev = -1, current_index = 0;
 let global_direction = undefined;
 let global_tdee;
+let global_fitness_goal;
+
 export let demographics = {
     inputs:['height','weight','age','gender','complete'],
     element:document.querySelector('.demographics-input'),
@@ -20,13 +22,30 @@ export let demographics = {
     result3:document.querySelector('#total-calorie-result > h4'),
     offset:'',
     final_tdee:'',
+    fitness_goal:document.getElementById('meal-plan-type'),
+    meal_plan_title:document.getElementById('meal-plan-title')
 }
 let fitness_goal = {
-    0:'fat_loss',
-    1:'fat_loss2',
-    2:'lean_mass',
-    3:'lean_mass2',
-    4:'balanced'
+    0:{
+        type:'fat_loss',
+        name:'Sustainable Fat Loss'
+    },
+    1:{
+        type:'fat_loss2',
+        name:'Aggressive Fat Loss'
+    },
+    2:{
+        type:'lean_mass',
+        name:'Lean Muscle Gain (Lean Bulk)'
+    },
+    3:{
+        type:'lean_mass2',
+        name:'Aggressive Muscle Gain (Dirty Bulk)'
+    },
+    4:{
+        type:'balanced',
+        name:'Body Recomposition'
+    }
 }
 
 let global_BMR = undefined;
@@ -506,8 +525,17 @@ function handleOffsetClick(e,index) {
                         demographics.offset = `${per} ${type}`;
 
                         if(demographics.offset && demographics.offset !== '') {
+                        if(global_fitness_goal){
+                            global_fitness_goal = ''
+                        }
                         calculateTDEEWithOffset(demographics.offset);
-                        handleMacros(demographics.final_tdee, fitness_goal[index]);
+                        console.log(fitness_goal[index].type)
+                        handleMacros(demographics.final_tdee, fitness_goal[index].type);
+
+                        // update fitness goal
+                        global_fitness_goal = fitness_goal[index].name;
+                        demographics.fitness_goal.textContent = global_fitness_goal + " " + per + " " + type;
+
 
                         // scroll to top of page
                         window.scrollTo(0,0)

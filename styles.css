@@ -560,11 +560,17 @@ select:hover {
     color:var(--color-main) !important;
 }
 
-#save-meal-button:hover{
+#save-meal-button:hover,
+#prev-meal-button:hover,
+#next-meal-button:hover,
+#edit-meal-button:hover{
     cursor:pointer;
     transform: scale(.98);
 }
-#save-meal-button {
+#save-meal-button,
+#prev-meal-button,
+#next-meal-button,
+#edit-meal-button{
     width:66%;
     height:50px;
 
@@ -586,9 +592,23 @@ select:hover {
 
     margin-top:1rem;
 
+
+
+}
+#save-meal-button{
     background-color: #0f0;
-
-
+}
+#prev-meal-button{
+    background-color: purple;
+    color:#fff;
+}
+#next-meal-button{
+    background-color: orange;
+    color:#000;
+}
+#edit-meal-button{
+    background-color: #00f;
+    color:#fff;
 }
 
 /* interactive btn */
@@ -684,8 +704,20 @@ select:hover {
 
     
 }
-#meal-plan-title,#plate-number {
-    color:var(--color-secondary)
+#meal-plan-title, #meal-plan-type {
+
+    text-align:center;
+    color:var(--color-secondary);
+
+    color:#0f0;
+
+    margin-bottom:1.5rem;
+
+
+    font-size:18pt;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#meal-plan-title {
 }
 .column-label {
     text-align: center;
