@@ -684,7 +684,7 @@ function increaseMealIndex(idx) {
         if(meals[idx - 1]){
             search.filter.setAttribute('disabled',true);
             
-            if(idx === meals.length){
+            if(idx === number_of_meals){
                 disableNext();
             } else {
                 enableNext();
@@ -703,6 +703,9 @@ function increaseMealIndex(idx) {
         search.filter.setAttribute('disabled',true)
         console.error('Error: You have reached the last meal.')
     }
+
+        //restore plan
+        restorePlan(current_meal_plan);
 }
 
 function decreaseMealIndex(idx) {
@@ -736,12 +739,22 @@ function decreaseMealIndex(idx) {
         demographics.meal_plan_title.textContent = `Meal Plan ${idx}/${number_of_meals}`;
         current_meal_plan = idx;
 
+        //restore plan
+        restorePlan(current_meal_plan);
     }
 }
 
+// {...number_of_meals,meal_title,fitness_goal,plate,daily,target,current,foods}
 function restorePlan(index) {
     if(index && meals[index-1]) {
-        console.log(meals[index - 1])
+        console.log(meals[index - 1]);
+
+        // deconstruct saved meal
+        const {number_of_meals, meal_title, fitness_goal, plate, daily, target, current, foods} = meals[index - 1];
+
+        // replace plate container 
+        // plateContainer.replaceWith(plate)
+
     } else {
         console.error('Error: check meals[] or index.')
     }
