@@ -754,8 +754,22 @@ function restorePlan(index) {
         // deconstruct saved meal
         const {number_of_meals, meal_title, fitness_goal, plate, daily, target, current, foods} = meals[index - 1];
 
+        
+
         // replace plate container 
         document.getElementById('plate-container').replaceWith(plate);
+
+        // replace total macros
+        document.getElementById('total-grams-container').replaceWith(daily);
+
+        // replace target macros
+        document.getElementById('target-grams-container').replaceWith(target);
+
+        // replace current macros
+        document.getElementById('current-plate-container').replaceWith(current);
+
+
+        // update the current plate
         handleCurrentPlate(foods); // -> addMacros(children)
 
     } else {
