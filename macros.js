@@ -705,7 +705,7 @@ function increaseMealIndex(idx) {
     }
 
         //restore plan
-        restorePlan(current_meal_plan);
+        restorePlan(idx);
 }
 
 function decreaseMealIndex(idx) {
@@ -727,7 +727,7 @@ function decreaseMealIndex(idx) {
         // check if meal exists
         if(meals[idx - 1]){
             search.filter.setAttribute('disabled',true);
-            console.log('the meal exists at index ' + idx-1)
+            console.log('idx')
             enableNext();
             enableEdit();
             
@@ -740,7 +740,7 @@ function decreaseMealIndex(idx) {
         current_meal_plan = idx;
 
         //restore plan
-        restorePlan(current_meal_plan);
+        restorePlan(idx);
     }
 }
 
@@ -753,9 +753,10 @@ function restorePlan(index) {
         const {number_of_meals, meal_title, fitness_goal, plate, daily, target, current, foods} = meals[index - 1];
 
         // replace plate container 
-        // plateContainer.replaceWith(plate)
+        document.getElementById('plate-container').replaceWith(plate);
 
     } else {
+        clearPlate(true);
         console.error('Error: check meals[] or index.')
     }
 }
