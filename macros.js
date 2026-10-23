@@ -611,6 +611,7 @@ function nextMeal(e){
     increaseMealIndex(current_meal_plan);
 }
 function previousMeal(e) {
+    notReadyToSave();
     decreaseMealIndex(current_meal_plan);
 }
 function saveMeal(e) {
