@@ -81,7 +81,7 @@ let initialMove = true;
 
 
 // window events
-window.onbeforeunload = beforeUnload;
+// window.onbeforeunload = beforeUnload;
 window.onscroll = handleWindowScroll
 
 

@@ -7,7 +7,7 @@
 /* root directory */
 :root {
     --bg-main:#000;
-    --bg-secondary: #fff;
+    --bg-secondary: #d5d5d5;
     --bg-tertiary:rgb(0,0,255);
     --bg-special:#e7e7e7;
     --bg-input-bmr: #000;
@@ -447,7 +447,8 @@ select:hover {
 
 #bmr-result h4,
 #total-calorie-result h4,
-#tdee-result h4{
+#tdee-result h4,
+#meal-plan-title, #meal-plan-type{
     width:inherit;
     text-align: center;
 

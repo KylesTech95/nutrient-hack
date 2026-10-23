@@ -684,7 +684,7 @@ function increaseMealIndex(idx) {
         if(meals[idx - 1]){
             search.filter.setAttribute('disabled',true);
             
-            if(index === meals.length - 1){
+            if(idx === meals.length){
                 disableNext();
             } else {
                 enableNext();
