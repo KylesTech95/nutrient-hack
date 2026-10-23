@@ -364,6 +364,7 @@ function addMacros(children){
         fats:null,
     }
     
+    console.log(children)
     for(let i = 0; i < children.length; i++) {
         let attr = children[i].getAttribute('--data-set');
             
@@ -746,6 +747,7 @@ function decreaseMealIndex(idx) {
 
 // {...number_of_meals,meal_title,fitness_goal,plate,daily,target,current,foods}
 function restorePlan(index) {
+    console.log(meals[index-1])
     if(index && meals[index-1]) {
         console.log(meals[index - 1]);
 
@@ -754,8 +756,10 @@ function restorePlan(index) {
 
         // replace plate container 
         document.getElementById('plate-container').replaceWith(plate);
+        handleCurrentPlate(foods); // -> addMacros(children)
 
     } else {
+        // restore plate
         clearPlate(true);
         console.error('Error: check meals[] or index.')
     }
