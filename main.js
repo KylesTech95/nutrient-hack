@@ -109,7 +109,7 @@ function goBack(){
         return false;
     } else {
         // clear plate
-        clearPlate(true)
+        clearPlate()
         return true;
     }
 }
@@ -541,7 +541,7 @@ function handleOffsetClick(e,index) {
                         window.scrollTo(0,0)
 
                         // clear plate
-                        clearPlate(false);
+                        clearPlate();
                     }
                 }
             })

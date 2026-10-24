@@ -468,7 +468,7 @@ let restoreMacros = {
     1:'C',
     2:'F',
 }
-export function clearPlate(cleared) {
+export function clearPlate() {
     current_portion = {};
 
     const indicators = [...document.querySelectorAll('.plate-indicator')];
@@ -476,13 +476,11 @@ export function clearPlate(cleared) {
     // lower indicator height
     indicators.map(ind => ind.style = `height:0`);
 
-    let total_grams_children = [...totalGramsContainer.children];
+    let total_grams_children = [...document.getElementById('total-grams-container').children];
+
         total_grams_children.map((child,idx) => {
-            if(cleared){
-                currentPlateContainer.children[idx].textContent = restoreMacros[idx]
-            }
-            currentPlateContainer.children[idx].textContent = restoreMacros[idx];
-        })
+            document.getElementById('current-plate-container').children[idx].textContent = restoreMacros[idx];
+        });
 
         // clear results
         let chosen_items = [...search.select.children];
@@ -609,10 +607,13 @@ function disableEdit(){
 }
 
 function nextMeal(e){
+    // saveMealButton.click();
+    // saveMeal(saveMealButton);
     increaseMealIndex(current_meal_plan);
 }
 function previousMeal(e) {
     notReadyToSave();
+    clearResults();
     decreaseMealIndex(current_meal_plan);
 }
 function saveMeal(e) {
@@ -644,18 +645,26 @@ function saveMeal(e) {
 
     let save_object = {...number_of_meals,meal_title,fitness_goal,plate,daily,target,current,foods}
 
-    meals.push(save_object);
+    // meals.push(save_object);
+    // if meal exists
+    if(meals[current_meal_plan]){
+        // remove meal from the same index & replace with new object
+        meals = meals.splice(current_meal_plan, 1, save_object);
+    } else {
+        // push meal to the array
+        meals.push(save_object);
+    }
 
     // hide button
     notReadyToSave();
 
     console.log(meals);
 
-    clearPlate(true)
+    clearPlate()
     clearResults();
     search.filter.value = ''
 
-    increaseMealIndex(current_meal_plan)
+    increaseMealIndex(current_meal_plan);
 }
 
 function removeMeal() {
@@ -700,13 +709,16 @@ function increaseMealIndex(idx) {
 
         demographics.meal_plan_title.textContent = `Meal Plan ${idx}/${number_of_meals}`;
         current_meal_plan = idx;
+
+        //restore plan
+        restorePlan(current_meal_plan);
     } else {
         search.filter.setAttribute('disabled',true)
         console.error('Error: You have reached the last meal.')
     }
 
         //restore plan
-        restorePlan(idx);
+        // restorePlan(idx);
 }
 
 function decreaseMealIndex(idx) {
@@ -740,8 +752,8 @@ function decreaseMealIndex(idx) {
         demographics.meal_plan_title.textContent = `Meal Plan ${idx}/${number_of_meals}`;
         current_meal_plan = idx;
 
-        //restore plan
-        restorePlan(idx);
+        // restore plan
+        restorePlan(current_meal_plan);
     }
 }
 
@@ -756,6 +768,7 @@ function restorePlan(index) {
 
         
 
+        console.log([...current.children].map(child => child.textContent))
         // replace plate container 
         document.getElementById('plate-container').replaceWith(plate);
 
@@ -769,12 +782,18 @@ function restorePlan(index) {
         document.getElementById('current-plate-container').replaceWith(current);
 
 
-        // update the current plate
+        // update the current plate container
         handleCurrentPlate(foods); // -> addMacros(children)
 
     } else {
-        // restore plate
-        clearPlate(true);
+        // restore plate / save current meal
+        clearPlate()
+        clearResults();
+        let current_plate_children = [...document.getElementById('current-plate-container').children]
+        current_plate_children.map(c => {
+            console.log('update current-macro-node on least meal')
+            c.textContent = '0';
+        })
         console.error('Error: check meals[] or index.')
     }
 }
